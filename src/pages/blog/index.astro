@@ -1,0 +1,228 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/blog/PostCard.astro';
+import SearchBar from '../../components/blog/SearchBar.astro';
+import Pagination from '../../components/blog/Pagination.astro';
+import Badge from '../../components/ui/Badge.astro';
+import { BookOpen, TrendingUp } from 'lucide-astro';
+
+// In a real app, this would come from the API/database
+const mockPosts = [
+  {
+    _id: '1',
+    title: 'Introducción a React Server Components',
+    slug: 'intro-react-server-components',
+    excerpt: 'Descubre el nuevo paradigma de React que permite renderizado híbrido entre servidor y cliente.',
+    content: '',
+    author: { name: 'Juan Pérez', email: 'juan@example.com' },
+    publishedAt: new Date('2025-01-10'),
+    updatedAt: new Date('2025-01-10'),
+    featuredImage: 'https://images.pexels.com/photos/1181677/pexels-photo-1181677.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&dpr=2',
+    categories: [{ name: 'Frontend', slug: 'frontend', color: '#3b82f6' }],
+    tags: [{ name: 'React', slug: 'react' }, { name: 'SSR', slug: 'ssr' }],
+    readingTime: 8,
+    isPublished: true,
+    seo: { keywords: [] }
+  },
+  {
+    _id: '2',
+    title: 'Docker para Desarrolladores: Guía Completa',
+    slug: 'docker-desarrolladores-guia',
+    excerpt: 'Todo lo que necesitas saber sobre Docker para mejorar tu flujo de desarrollo.',
+    content: '',
+    author: { name: 'María García', email: 'maria@example.com' },
+    publishedAt: new Date('2025-01-08'),
+    updatedAt: new Date('2025-01-08'),
+    featuredImage: 'https://images.pexels.com/photos/546819/pexels-photo-546819.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&dpr=2',
+    categories: [{ name: 'DevOps', slug: 'devops', color: '#7c3aed' }],
+    tags: [{ name: 'Docker', slug: 'docker' }, { name: 'Containers', slug: 'containers' }],
+    readingTime: 12,
+    isPublished: true,
+    seo: { keywords: [] }
+  },
+  {
+    _id: '3',
+    title: 'TypeScript 5.0: Nuevas Características',
+    slug: 'typescript-5-nuevas-caracteristicas',
+    excerpt: 'Explora las mejoras y nuevas funcionalidades que trae TypeScript 5.0.',
+    content: '',
+    author: { name: 'Carlos López', email: 'carlos@example.com' },
+    publishedAt: new Date('2025-01-06'),
+    updatedAt: new Date('2025-01-06'),
+    featuredImage: 'https://images.pexels.com/photos/4164418/pexels-photo-4164418.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&dpr=2',
+    categories: [{ name: 'Backend', slug: 'backend', color: '#059669' }],
+    tags: [{ name: 'TypeScript', slug: 'typescript' }, { name: 'JavaScript', slug: 'javascript' }],
+    readingTime: 6,
+    isPublished: true,
+    seo: { keywords: [] }
+  }
+];
+
+const mockPagination = {
+  page: 1,
+  limit: 10,
+  total: 25,
+  totalPages: 3,
+  hasNext: true,
+  hasPrev: false
+};
+
+// Page title and meta
+const pageTitle = 'Blog - Todos los Artículos';
+const pageDescription = 'Explora todos nuestros artículos sobre desarrollo de software, tecnologías emergentes y mejores prácticas de programación.';
+---
+
+<BaseLayout
+  title={pageTitle}
+  description={pageDescription}
+  keywords={['blog desarrollo', 'artículos programación', 'tutoriales software', 'tecnología']}
+  structuredData={{
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "name": "DevBlog - Blog de Desarrollo de Software",
+    "description": pageDescription,
+    "url": "https://devblog.com/blog",
+    "author": {
+      "@type": "Organization",
+      "name": "DevBlog"
+    }
+  }}
+>
+  <!-- Header Section -->
+  <section class="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-white py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl">
+        <div class="flex items-center space-x-3 mb-6">
+          <div class="w-12 h-12 bg-primary-600 rounded-xl flex items-center justify-center">
+            <BookOpen size={24} class="text-white" />
+          </div>
+          <Badge variant="primary" size="md">
+            <TrendingUp size={14} class="mr-1" />
+            Blog Actualizado
+          </Badge>
+        </div>
+        
+        <h1 class="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+          Artículos de
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-accent-400">
+            Desarrollo
+          </span>
+        </h1>
+        
+        <p class="text-xl text-gray-300 mb-8 leading-relaxed">
+          Descubre tutoriales, guías y análisis profundos sobre las tecnologías 
+          que están moldeando el futuro del desarrollo de software.
+        </p>
+
+        <!-- Stats -->
+        <div class="flex items-center space-x-8 text-sm">
+          <div class="flex items-center space-x-2">
+            <div class="w-2 h-2 bg-green-400 rounded-full"></div>
+            <span class="text-gray-400">{mockPagination.total} artículos publicados</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <div class="w-2 h-2 bg-blue-400 rounded-full"></div>
+            <span class="text-gray-400">Actualizado semanalmente</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Search Section -->
+  <section class="py-12 bg-gray-50 dark:bg-gray-900">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <SearchBar />
+    </div>
+  </section>
+
+  <!-- Posts Grid -->
+  <section class="py-16 bg-white dark:bg-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between mb-12">
+        <div>
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+            Últimos Artículos
+          </h2>
+          <p class="text-gray-600 dark:text-gray-400">
+            Página {mockPagination.page} de {mockPagination.totalPages}
+          </p>
+        </div>
+        
+        <!-- Filter Options -->
+        <div class="hidden md:flex items-center space-x-4">
+          <select class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm">
+            <option>Más recientes</option>
+            <option>Más populares</option>
+            <option>Más leídos</option>
+          </select>
+        </div>
+      </div>
+
+      {mockPosts.length > 0 ? (
+        <>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+            {mockPosts.map((post) => (
+              <PostCard post={post} />
+            ))}
+          </div>
+          
+          <Pagination 
+            pagination={mockPagination} 
+            baseUrl="/blog" 
+          />
+        </>
+      ) : (
+        <div class="text-center py-16">
+          <div class="w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-6">
+            <BookOpen size={32} class="text-gray-400" />
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+            No hay artículos disponibles
+          </h3>
+          <p class="text-gray-600 dark:text-gray-400 mb-6">
+            Los artículos aparecerán aquí cuando estén disponibles.
+          </p>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- Categories Section -->
+  <section class="py-16 bg-gray-50 dark:bg-gray-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+          Explora por Categorías
+        </h2>
+        <p class="text-gray-600 dark:text-gray-400">
+          Encuentra contenido especializado en tus áreas de interés
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        {[
+          { name: 'Frontend', count: 45, color: 'bg-blue-500' },
+          { name: 'Backend', count: 38, color: 'bg-green-500' },
+          { name: 'DevOps', count: 22, color: 'bg-purple-500' },
+          { name: 'Mobile', count: 15, color: 'bg-orange-500' }
+        ].map((category) => (
+          <a 
+            href={`/categories/${category.name.toLowerCase()}`}
+            class="block p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:shadow-md hover:-translate-y-1 transition-all duration-200"
+          >
+            <div class={`w-12 h-12 ${category.color} rounded-lg flex items-center justify-center mb-4`}>
+              <BookOpen size={20} class="text-white" />
+            </div>
+            <h3 class="font-semibold text-gray-900 dark:text-white mb-1">
+              {category.name}
+            </h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+              {category.count} artículos
+            </p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

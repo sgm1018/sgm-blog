@@ -1,0 +1,124 @@
+---
+import { ChevronLeft, ChevronRight } from 'lucide-astro';
+import type { PaginationData } from '../../types/blog.types';
+import Button from '../ui/Button.astro';
+
+export interface Props {
+  pagination: PaginationData;
+  baseUrl: string;
+}
+
+const { pagination, baseUrl } = Astro.props;
+const { page, totalPages, hasNext, hasPrev } = pagination;
+
+function generatePageUrl(pageNum: number): string {
+  const url = new URL(baseUrl, Astro.site);
+  if (pageNum > 1) {
+    url.searchParams.set('page', pageNum.toString());
+  }
+  return url.pathname + url.search;
+}
+
+// Generate page numbers array
+const getPageNumbers = (current: number, total: number): (number | string)[] => {
+  const pages: (number | string)[] = [];
+  
+  if (total <= 7) {
+    for (let i = 1; i <= total; i++) {
+      pages.push(i);
+    }
+  } else {
+    pages.push(1);
+    
+    if (current > 4) {
+      pages.push('...');
+    }
+    
+    const start = Math.max(2, current - 2);
+    const end = Math.min(total - 1, current + 2);
+    
+    for (let i = start; i <= end; i++) {
+      if (i !== 1 && i !== total) {
+        pages.push(i);
+      }
+    }
+    
+    if (current < total - 3) {
+      pages.push('...');
+    }
+    
+    if (total > 1) {
+      pages.push(total);
+    }
+  }
+  
+  return pages;
+};
+
+const pageNumbers = getPageNumbers(page, totalPages);
+---
+
+{totalPages > 1 && (
+  <nav class="flex items-center justify-center space-x-2 mt-12" aria-label="Pagination">
+    <!-- Previous Button -->
+    {hasPrev ? (
+      <Button
+        href={generatePageUrl(page - 1)}
+        variant="outline"
+        class="flex items-center"
+      >
+        <ChevronLeft size={16} class="mr-1" />
+        Anterior
+      </Button>
+    ) : (
+      <Button variant="outline" disabled class="flex items-center">
+        <ChevronLeft size={16} class="mr-1" />
+        Anterior
+      </Button>
+    )}
+
+    <!-- Page Numbers -->
+    <div class="hidden sm:flex items-center space-x-1">
+      {pageNumbers.map((pageNum) => (
+        pageNum === '...' ? (
+          <span class="px-3 py-2 text-gray-500 dark:text-gray-400">
+            {pageNum}
+          </span>
+        ) : (
+          <Button
+            href={pageNum === page ? undefined : generatePageUrl(pageNum as number)}
+            variant={pageNum === page ? 'primary' : 'ghost'}
+            size="sm"
+            class={`min-w-[40px] ${pageNum === page ? 'cursor-default' : ''}`}
+          >
+            {pageNum}
+          </Button>
+        )
+      ))}
+    </div>
+
+    <!-- Mobile Page Info -->
+    <div class="sm:hidden flex items-center space-x-2">
+      <span class="text-sm text-gray-600 dark:text-gray-400">
+        {page} de {totalPages}
+      </span>
+    </div>
+
+    <!-- Next Button -->
+    {hasNext ? (
+      <Button
+        href={generatePageUrl(page + 1)}
+        variant="outline"
+        class="flex items-center"
+      >
+        Siguiente
+        <ChevronRight size={16} class="ml-1" />
+      </Button>
+    ) : (
+      <Button variant="outline" disabled class="flex items-center">
+        Siguiente
+        <ChevronRight size={16} class="ml-1" />
+      </Button>
+    )}
+  </nav>
+)}

@@ -1,0 +1,145 @@
+---
+import { Menu, X, Search, Moon, Sun } from 'lucide-astro';
+import Button from '../ui/Button.astro';
+
+const currentPath = Astro.url.pathname;
+
+interface NavigationItem {
+  name: string;
+  href: string;
+  current?: boolean;
+}
+
+const navigation: NavigationItem[] = [
+  { name: 'Inicio', href: '/', current: currentPath === '/' },
+  { name: 'Blog', href: '/blog', current: currentPath.startsWith('/blog') },
+  { name: 'Categorías', href: '/categories', current: currentPath.startsWith('/categories') },
+  { name: 'Sobre Mí', href: '/about', current: currentPath === '/about' },
+];
+---
+
+<header class="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800">
+  <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <!-- Logo -->
+      <div class="flex-shrink-0">
+        <a href="/" class="flex items-center space-x-3">
+          <div class="w-10 h-10 bg-gradient-to-br from-primary-600 to-accent-600 rounded-xl flex items-center justify-center">
+            <span class="text-white font-bold text-lg">D</span>
+          </div>
+          <span class="text-xl font-bold text-gray-900 dark:text-white">DevBlog</span>
+        </a>
+      </div>
+
+      <!-- Desktop Navigation -->
+      <div class="hidden md:block">
+        <div class="ml-10 flex items-baseline space-x-8">
+          {navigation.map((item) => (
+            <a
+              href={item.href}
+              class={`px-3 py-2 text-sm font-medium transition-colors duration-200 ${
+                item.current
+                  ? 'text-primary-600 dark:text-primary-400 border-b-2 border-primary-600 dark:border-primary-400'
+                  : 'text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400'
+              }`}
+            >
+              {item.name}
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="hidden md:flex items-center space-x-4">
+        <Button variant="ghost" class="p-2">
+          <Search size={20} />
+        </Button>
+        
+        <Button variant="ghost" class="p-2 theme-toggle">
+          <Sun size={20} class="dark:hidden" />
+          <Moon size={20} class="hidden dark:block" />
+        </Button>
+      </div>
+
+      <!-- Mobile menu button -->
+      <div class="md:hidden">
+        <Button variant="ghost" class="p-2 mobile-menu-button">
+          <Menu size={24} class="menu-open" />
+          <X size={24} class="menu-close hidden" />
+        </Button>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <div class="md:hidden mobile-menu hidden">
+      <div class="px-2 pt-2 pb-3 space-y-1 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
+        {navigation.map((item) => (
+          <a
+            href={item.href}
+            class={`block px-3 py-2 text-base font-medium transition-colors duration-200 ${
+              item.current
+                ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
+                : 'text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-gray-800'
+            }`}
+          >
+            {item.name}
+          </a>
+        ))}
+        
+        <div class="flex items-center space-x-4 px-3 py-2">
+          <Button variant="ghost" class="p-2">
+            <Search size={20} />
+          </Button>
+          
+          <Button variant="ghost" class="p-2 theme-toggle">
+            <Sun size={20} class="dark:hidden" />
+            <Moon size={20} class="hidden dark:block" />
+          </Button>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Mobile menu toggle
+    const mobileMenuButton = document.querySelector('.mobile-menu-button');
+    const mobileMenu = document.querySelector('.mobile-menu');
+    const menuOpenIcon = document.querySelector('.menu-open');
+    const menuCloseIcon = document.querySelector('.menu-close');
+
+    mobileMenuButton?.addEventListener('click', () => {
+      mobileMenu?.classList.toggle('hidden');
+      menuOpenIcon?.classList.toggle('hidden');
+      menuCloseIcon?.classList.toggle('hidden');
+    });
+
+    // Theme toggle
+    const themeToggles = document.querySelectorAll('.theme-toggle');
+    
+    const updateTheme = () => {
+      const isDark = document.documentElement.classList.contains('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    };
+
+    const initTheme = () => {
+      const savedTheme = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      
+      if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        document.documentElement.classList.add('dark');
+      }
+    };
+
+    themeToggles.forEach(toggle => {
+      toggle.addEventListener('click', () => {
+        document.documentElement.classList.toggle('dark');
+        updateTheme();
+      });
+    });
+
+    initTheme();
+  });
+</script>
+</header>

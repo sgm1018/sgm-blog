@@ -1,0 +1,308 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/blog/PostCard.astro';
+import SearchBar from '../components/blog/SearchBar.astro';
+import Button from '../components/ui/Button.astro';
+import Badge from '../components/ui/Badge.astro';
+import Card from '../components/ui/Card.astro';
+import { Code, BookOpen, Users, TrendingUp, ArrowRight, Star } from 'lucide-astro';
+
+
+
+// Sample data for demonstration
+const featuredPost = {
+  _id: '1',
+  title: 'El Futuro del Desarrollo Web: Tendencias 2025',
+  slug: 'futuro-desarrollo-web-2025',
+  excerpt: 'Exploramos las tecnologías emergentes que están transformando el desarrollo web moderno, desde WebAssembly hasta los frameworks de próxima generación.',
+  content: '',
+  author: {
+    name: 'Juan Pérez',
+    email: 'juan@example.com',
+    avatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=64&h=64&dpr=2'
+  },
+  publishedAt: new Date('2025-01-10'),
+  updatedAt: new Date('2025-01-10'),
+  featuredImage: 'https://images.pexels.com/photos/577585/pexels-photo-577585.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=2',
+  categories: [{ name: 'Frontend', slug: 'frontend', color: '#3b82f6' }],
+  tags: [{ name: 'React', slug: 'react' }, { name: 'Next.js', slug: 'nextjs' }],
+  readingTime: 8,
+  isPublished: true,
+  seo: {
+    title: 'El Futuro del Desarrollo Web: Tendencias 2025',
+    description: 'Exploramos las tecnologías emergentes que están transformando el desarrollo web moderno.',
+    keywords: ['desarrollo web', 'tendencias 2025', 'tecnología']
+  }
+};
+
+const recentPosts = [
+  {
+    _id: '2',
+    title: 'TypeScript Avanzado: Tipos Condicionales y Mapped Types',
+    slug: 'typescript-avanzado-tipos-condicionales',
+    excerpt: 'Domina los conceptos avanzados de TypeScript para escribir código más seguro y expresivo.',
+    content: '',
+    author: {
+      name: 'María García',
+      email: 'maria@example.com'
+    },
+    publishedAt: new Date('2025-01-08'),
+    updatedAt: new Date('2025-01-08'),
+    featuredImage: 'https://images.pexels.com/photos/4164418/pexels-photo-4164418.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&dpr=2',
+    categories: [{ name: 'Backend', slug: 'backend', color: '#059669' }],
+    tags: [{ name: 'TypeScript', slug: 'typescript' }, { name: 'JavaScript', slug: 'javascript' }],
+    readingTime: 6,
+    isPublished: true,
+    seo: {
+      keywords: []
+    }
+  },
+  {
+    _id: '3',
+    title: 'Arquitectura de Microservicios con Docker y Kubernetes',
+    slug: 'microservicios-docker-kubernetes',
+    excerpt: 'Guía completa para diseñar y desplegar aplicaciones basadas en microservicios.',
+    content: '',
+    author: {
+      name: 'Carlos López',
+      email: 'carlos@example.com'
+    },
+    publishedAt: new Date('2025-01-06'),
+    updatedAt: new Date('2025-01-06'),
+    featuredImage: 'https://images.pexels.com/photos/546819/pexels-photo-546819.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&dpr=2',
+    categories: [{ name: 'DevOps', slug: 'devops', color: '#7c3aed' }],
+    tags: [{ name: 'Docker', slug: 'docker' }, { name: 'Kubernetes', slug: 'kubernetes' }],
+    readingTime: 12,
+    isPublished: true,
+    seo: {
+      keywords: []
+    }
+  },
+  {
+    _id: '4',
+    title: 'React Server Components: El Nuevo Paradigma',
+    slug: 'react-server-components-paradigma',
+    excerpt: 'Descubre cómo los Server Components están revolucionando el desarrollo con React.',
+    content: '',
+    author: {
+      name: 'Ana Martín',
+      email: 'ana@example.com'
+    },
+    publishedAt: new Date('2025-01-04'),
+    updatedAt: new Date('2025-01-04'),
+    featuredImage: 'https://images.pexels.com/photos/1181677/pexels-photo-1181677.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&dpr=2',
+    categories: [{ name: 'Frontend', slug: 'frontend', color: '#3b82f6' }],
+    tags: [{ name: 'React', slug: 'react' }, { name: 'SSR', slug: 'ssr' }],
+    readingTime: 9,
+    isPublished: true,
+    seo: {
+      keywords: []
+    }
+  }
+];
+
+const stats = [
+  { label: 'Artículos Publicados', value: '120+', icon: BookOpen },
+  { label: 'Desarrolladores Leen', value: '15K+', icon: Users },
+  { label: 'Tecnologías Cubiertas', value: '50+', icon: Code },
+  { label: 'Proyectos Destacados', value: '25+', icon: Star }
+];
+
+const categories = [
+  { name: 'Frontend', slug: 'frontend', description: 'React, Vue, Angular, CSS', color: 'bg-blue-500', posts: 45 },
+  { name: 'Backend', slug: 'backend', description: 'Node.js, Python, Java, APIs', color: 'bg-green-500', posts: 38 },
+  { name: 'DevOps', slug: 'devops', description: 'Docker, Kubernetes, CI/CD', color: 'bg-purple-500', posts: 22 },
+  { name: 'Mobile', slug: 'mobile', description: 'React Native, Flutter, Swift', color: 'bg-orange-500', posts: 15 }
+];
+---
+
+<BaseLayout
+  title="DevBlog - Desarrollo de Software y Tecnología"
+  description="Blog especializado en desarrollo de software, tecnologías emergentes y mejores prácticas para desarrolladores modernos."
+  keywords={['desarrollo software', 'programación', 'tecnología', 'blog desarrollo']}
+>
+  <!-- Hero Section -->
+  <section class="relative bg-gradient-to-br from-primary-600 via-primary-700 to-accent-600 text-white overflow-hidden">
+    <div class="absolute inset-0 bg-black/20"></div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
+      <div class="max-w-3xl">
+        <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+          Código, Innovación y
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-pink-400">
+            Conocimiento
+          </span>
+        </h1>
+        <p class="text-xl md:text-2xl text-blue-100 mb-8 leading-relaxed">
+          Descubre las últimas tendencias en desarrollo de software, tutoriales prácticos 
+          y mejores prácticas de la industria tech.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <Button href="/blog" size="lg" class="bg-white text-primary-600 hover:bg-gray-100">
+            Explorar Artículos
+            <ArrowRight size={20} class="ml-2" />
+          </Button>
+          <Button href="/about" variant="outline" size="lg" class="border-white text-white hover:bg-white/10">
+            Sobre el Blog
+          </Button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Decorative Elements -->
+    <div class="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-gradient-to-br from-white/10 to-transparent rounded-full blur-3xl"></div>
+    <div class="absolute bottom-0 left-0 -mb-32 -ml-32 w-96 h-96 bg-gradient-to-tr from-accent-500/20 to-transparent rounded-full blur-3xl"></div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="py-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+        {stats.map((stat) => (
+          <div class="text-center">
+            <div class="flex justify-center mb-4">
+              <div class="w-12 h-12 bg-primary-100 dark:bg-primary-900/30 rounded-xl flex items-center justify-center">
+                <stat.icon size={24} class="text-primary-600 dark:text-primary-400" />
+              </div>
+            </div>
+            <div class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2">
+              {stat.value}
+            </div>
+            <div class="text-gray-600 dark:text-gray-400 text-sm">
+              {stat.label}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Search Section -->
+  <section class="py-12 bg-gray-50 dark:bg-gray-900">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-8">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4">
+          ¿Qué te interesa aprender hoy?
+        </h2>
+        <p class="text-gray-600 dark:text-gray-400">
+          Busca entre cientos de artículos sobre desarrollo, tecnología y programación
+        </p>
+      </div>
+      <SearchBar />
+    </div>
+  </section>
+
+  <!-- Featured Post Section -->
+  <section class="py-16 bg-white dark:bg-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between mb-12">
+        <div>
+          <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+            Artículo Destacado
+          </h2>
+          <p class="text-gray-600 dark:text-gray-400">
+            El contenido más relevante y actualizado
+          </p>
+        </div>
+        <Badge variant="success" size="md">
+          <TrendingUp size={14} class="mr-1" />
+          Trending
+        </Badge>
+      </div>
+      
+      <PostCard post={featuredPost} featured={true} />
+    </div>
+  </section>
+
+  <!-- Recent Posts Section -->
+  <section class="py-16 bg-gray-50 dark:bg-gray-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 dark:text-white">
+          Artículos Recientes
+        </h2>
+        <Button href="/blog" variant="outline">
+          Ver Todos
+          <ArrowRight size={16} class="ml-2" />
+        </Button>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {recentPosts.map((post) => (
+          <PostCard post={post} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories Section -->
+  <section class="py-16 bg-white dark:bg-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+          Explora por Categorías
+        </h2>
+        <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+          Encuentra contenido especializado en las tecnologías y áreas que más te interesan
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {categories.map((category) => (
+          <Card hover={true} class="text-center">
+            <div class={`w-16 h-16 ${category.color} rounded-2xl flex items-center justify-center mx-auto mb-4`}>
+              <Code size={32} class="text-white" />
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+              {category.name}
+            </h3>
+            <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
+              {category.description}
+            </p>
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-gray-500 dark:text-gray-400">
+                {category.posts} artículos
+              </span>
+              <Button 
+                href={`/categories/${category.slug}`} 
+                variant="ghost" 
+                size="sm"
+                class="text-primary-600 dark:text-primary-400"
+              >
+                Ver más →
+              </Button>
+            </div>
+          </Card>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter Section -->
+  <section class="py-16 bg-gradient-to-r from-primary-600 to-accent-600">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl font-bold text-white mb-4">
+        Mantente Actualizado
+      </h2>
+      <p class="text-xl text-blue-100 mb-8">
+        Recibe los mejores artículos y recursos directamente en tu email
+      </p>
+      
+      <form class="max-w-md mx-auto">
+        <div class="flex flex-col sm:flex-row gap-3">
+          <input
+            type="email"
+            placeholder="tu@email.com"
+            class="flex-1 px-4 py-3 rounded-lg border-0 focus:ring-2 focus:ring-white/30 bg-white/90 text-gray-900 placeholder-gray-600"
+            required
+          />
+          <Button type="submit" class="bg-white text-primary-600 hover:bg-gray-100">
+            Suscribirse
+          </Button>
+        </div>
+        <p class="text-blue-100 text-sm mt-3">
+          No spam. Cancela cuando quieras.
+        </p>
+      </form>
+    </div>
+  </section>
+</BaseLayout>

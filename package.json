@@ -1,0 +1,29 @@
+{
+  "name": "@example/devblog",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "seed": "node --loader tsx/esm src/data/seed.ts"
+  },
+  "dependencies": {
+    "@astrojs/rss": "^4.0.12",
+    "@astrojs/sitemap": "^3.4.2",
+    "@astrojs/tailwind": "^6.0.2",
+    "@tailwindcss/forms": "^0.5.9",
+    "@tailwindcss/typography": "^0.5.15",
+    "@types/node": "^22.10.7",
+    "astro": "^5.2.5",
+    "autoprefixer": "^10.4.20",
+    "lucide-astro": "^0.468.0",
+    "mongodb": "^6.12.0",
+    "tailwindcss": "^3.4.17"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2"
+  }
+}

@@ -1,0 +1,133 @@
+---
+import { Search, Filter } from 'lucide-astro';
+import Button from '../ui/Button.astro';
+---
+
+<div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-8">
+  <form class="search-form" data-search-url="/api/search">
+    <div class="flex flex-col md:flex-row gap-4">
+      <!-- Search Input -->
+      <div class="flex-1 relative">
+        <Search size={20} class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+        <input
+          type="text"
+          name="query"
+          placeholder="Buscar artículos, tecnologías, conceptos..."
+          class="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+        />
+      </div>
+
+      <!-- Category Filter -->
+      <div class="md:w-48">
+        <select
+          name="category"
+          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+        >
+          <option value="">Todas las categorías</option>
+          <option value="frontend">Frontend</option>
+          <option value="backend">Backend</option>
+          <option value="devops">DevOps</option>
+          <option value="mobile">Mobile</option>
+          <option value="data-science">Data Science</option>
+          <option value="architecture">Arquitectura</option>
+        </select>
+      </div>
+
+      <!-- Search Button -->
+      <Button type="submit" class="md:w-auto w-full">
+        <Search size={18} class="mr-2" />
+        Buscar
+      </Button>
+
+      <!-- Advanced Filters Button -->
+      <Button type="button" variant="outline" class="advanced-filters-toggle">
+        <Filter size={18} class="mr-2" />
+        Filtros
+      </Button>
+    </div>
+
+    <!-- Advanced Filters (Hidden by default) -->
+    <div class="advanced-filters hidden mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Author Filter -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Autor
+          </label>
+          <input
+            type="text"
+            name="author"
+            placeholder="Nombre del autor"
+            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+          />
+        </div>
+
+        <!-- Date From -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Desde
+          </label>
+          <input
+            type="date"
+            name="dateFrom"
+            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+          />
+        </div>
+
+        <!-- Date To -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Hasta
+          </label>
+          <input
+            type="date"
+            name="dateTo"
+            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+          />
+        </div>
+      </div>
+
+      <!-- Tags Input -->
+      <div class="mt-4">
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          Tags (separados por comas)
+        </label>
+        <input
+          type="text"
+          name="tags"
+          placeholder="react, typescript, nodejs"
+          class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+        />
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const advancedFiltersToggle = document.querySelector('.advanced-filters-toggle');
+    const advancedFilters = document.querySelector('.advanced-filters');
+
+    advancedFiltersToggle?.addEventListener('click', () => {
+      advancedFilters?.classList.toggle('hidden');
+    });
+
+    // Search functionality
+    const searchForm = document.querySelector('.search-form') as HTMLFormElement;
+    searchForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const formData = new FormData(searchForm);
+      const params = new URLSearchParams();
+      
+      formData.forEach((value, key) => {
+        if (value && value.toString().trim()) {
+          params.append(key, value.toString().trim());
+        }
+      });
+
+      // Redirect to search results page
+      window.location.href = `/blog/search?${params.toString()}`;
+    });
+  });
+</script>
