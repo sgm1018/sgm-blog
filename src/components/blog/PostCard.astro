@@ -1,10 +1,11 @@
 ---
-import { Calendar, Clock, User, ChevronRight } from 'lucide-astro';
+import { Calendar, Clock, ChevronRight } from 'lucide-astro';
 import type { BlogPost } from '../../types/blog.types';
 import { formatDate } from '../../lib/utils';
 import Card from '../ui/Card.astro';
 import Badge from '../ui/Badge.astro';
 import Button from '../ui/Button.astro';
+import AuthorCard from './AuthorCard.astro';
 
 export interface Props {
   post: BlogPost;
@@ -35,12 +36,12 @@ const { post, featured = false } = Astro.props;
     <div class={`p-6 flex-1 flex flex-col ${featured ? 'md:p-8' : ''}`}>
       <!-- Categories and Tags -->
       <div class="flex flex-wrap gap-2 mb-4">
-        {post.categories.slice(0, 2).map((category) => (
+        {post.category && (
           <Badge variant="primary" size="sm">
-            {category.name}
+            {post.category.name}
           </Badge>
-        ))}
-        {post.tags.slice(0, featured ? 3 : 2).map((tag) => (
+        )}
+        {post.tags && post.tags.slice(0, featured ? 3 : 2).map((tag) => (
           <Badge variant="default" size="sm">
             #{tag.name}
           </Badge>
@@ -58,20 +59,27 @@ const { post, featured = false } = Astro.props;
         {post.excerpt}
       </p>
 
-      <!-- Meta Information -->
-      <div class="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-4">
-        <div class="flex items-center space-x-4">
-          <div class="flex items-center space-x-1">
-            <User size={14} />
-            <span>{post.author.name}</span>
-          </div>
-          <div class="flex items-center space-x-1">
-            <Calendar size={14} />
-            <span>{formatDate(post.publishedAt)}</span>
-          </div>
-          <div class="flex items-center space-x-1">
-            <Clock size={14} />
-            <span>{post.readingTime} min</span>
+      <!-- Meta Information and Author -->
+      <div class="space-y-4 mb-4">
+        <!-- Author Section -->
+        <AuthorCard 
+          author={post.author} 
+          variant="inline" 
+          size="sm" 
+          showBio={true}
+        />
+
+        <!-- Post Meta -->
+        <div class="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+          <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-1">
+              <Calendar size={14} />
+              <span>{formatDate(post.publishedAt)}</span>
+            </div>
+            <div class="flex items-center space-x-1">
+              <Clock size={14} />
+              <span>{post.readingTime} min</span>
+            </div>
           </div>
         </div>
       </div>

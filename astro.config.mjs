@@ -8,11 +8,15 @@ export default defineConfig({
     tailwind(),
     sitemap()
   ],
-  output: 'server',
-  adapter: undefined,
+  output: 'static',
+  build: {
+    format: 'directory'
+  },
   vite: {
     define: {
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+      'process.env.SUPABASE_URL': JSON.stringify(process.env.SUPABASE_URL),
+      'process.env.SUPABASE_ANON_KEY': JSON.stringify(process.env.SUPABASE_ANON_KEY)
     }
   }
 });

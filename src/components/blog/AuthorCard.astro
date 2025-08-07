@@ -1,0 +1,361 @@
+---
+import { Twitter, Github, Linkedin, Globe, Mail, User, MapPin, Calendar, Award } from 'lucide-astro';
+import type { Author } from '../../types/blog.types';
+import Card from '../ui/Card.astro';
+import Button from '../ui/Button.astro';
+
+export interface Props {
+  author: Author;
+  showBio?: boolean;
+  size?: 'sm' | 'md' | 'lg';
+  variant?: 'card' | 'inline' | 'profile';
+}
+
+const { author, showBio = true, size = 'md', variant = 'card' } = Astro.props;
+
+const sizeConfig = {
+  sm: { avatar: 'w-12 h-12', name: 'text-sm', bio: 'text-xs', icon: 16 },
+  md: { avatar: 'w-16 h-16', name: 'text-base', bio: 'text-sm', icon: 18 },
+  lg: { avatar: 'w-20 h-20', name: 'text-lg', bio: 'text-base', icon: 20 }
+};
+
+const config = sizeConfig[size];
+---
+
+{variant === 'inline' ? (
+  <!-- Diseño inline para PostCard -->
+  <div class="flex items-center space-x-3 p-3 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-primary-200 dark:hover:border-primary-700 transition-all duration-300 group">
+    <!-- Avatar -->
+    <div class="relative flex-shrink-0">
+      {author.avatar ? (
+        <img
+          src={author.avatar}
+          alt={author.name}
+          class={`${config.avatar} rounded-full object-cover ring-2 ring-gray-100 dark:ring-gray-700 group-hover:ring-primary-200 dark:group-hover:ring-primary-600 transition-all duration-300`}
+          loading="lazy"
+        />
+      ) : (
+        <div class={`${config.avatar} rounded-full bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 flex items-center justify-center text-white font-semibold ring-2 ring-primary-200 dark:ring-primary-800 group-hover:scale-105 transition-transform duration-300`}>
+          {author.name.charAt(0).toUpperCase()}
+        </div>
+      )}
+      <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white dark:border-gray-800 rounded-full"></div>
+    </div>
+    
+    <!-- Info -->
+    <div class="flex-1 min-w-0">
+      <h4 class={`font-semibold text-gray-900 dark:text-white ${config.name} truncate group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-300`}>
+        {author.name}
+      </h4>
+      {author.bio && (
+        <p class={`text-gray-500 dark:text-gray-400 ${config.bio} truncate`}>
+          {author.bio.slice(0, 45)}...
+        </p>
+      )}
+    </div>
+  </div>
+) : variant === 'profile' ? (
+  <!-- Diseño perfil completo -->
+  <Card class="relative overflow-hidden">
+    <!-- Header con gradiente -->
+    <div class="absolute top-0 left-0 right-0 h-24 bg-gradient-to-r from-primary-500 via-primary-600 to-primary-700"></div>
+    
+    <div class="relative pt-16 pb-6 px-6">
+      <!-- Avatar centrado -->
+      <div class="flex justify-center mb-4">
+        {author.avatar ? (
+          <img
+            src={author.avatar}
+            alt={author.name}
+            class="w-24 h-24 rounded-full object-cover border-4 border-white dark:border-gray-800 shadow-xl"
+            loading="lazy"
+          />
+        ) : (
+          <div class="w-24 h-24 rounded-full bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center text-white font-bold text-2xl border-4 border-white dark:border-gray-800 shadow-xl">
+            {author.name.charAt(0).toUpperCase()}
+          </div>
+        )}
+      </div>
+
+      <!-- Información principal -->
+      <div class="text-center mb-6">
+        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
+          {author.name}
+        </h3>
+        {author.bio && (
+          <p class="text-gray-600 dark:text-gray-400 leading-relaxed max-w-md mx-auto">
+            {author.bio}
+          </p>
+        )}
+      </div>
+
+      <!-- Estadísticas -->
+      <div class="grid grid-cols-3 gap-4 mb-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
+        <div class="text-center">
+          <div class="text-lg font-bold text-gray-900 dark:text-white">12</div>
+          <div class="text-xs text-gray-500 dark:text-gray-400">Posts</div>
+        </div>
+        <div class="text-center border-x border-gray-200 dark:border-gray-700">
+          <div class="text-lg font-bold text-gray-900 dark:text-white">1.2K</div>
+          <div class="text-xs text-gray-500 dark:text-gray-400">Lectores</div>
+        </div>
+        <div class="text-center">
+          <div class="text-lg font-bold text-gray-900 dark:text-white">4.8</div>
+          <div class="text-xs text-gray-500 dark:text-gray-400">Rating</div>
+        </div>
+      </div>
+
+      <!-- Redes sociales -->
+      {author.social && (
+        <div class="flex justify-center space-x-3 mb-6">
+          {author.social.twitter && (
+            <a
+              href={author.social.twitter}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="p-3 text-blue-500 bg-blue-50 dark:bg-blue-900/20 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/40 hover:scale-110 transition-all duration-300"
+              title="Twitter"
+            >
+              <Twitter size={18} />
+            </a>
+          )}
+          {author.social.github && (
+            <a
+              href={author.social.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="p-3 text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-600 hover:scale-110 transition-all duration-300"
+              title="GitHub"
+            >
+              <Github size={18} />
+            </a>
+          )}
+          {author.social.linkedin && (
+            <a
+              href={author.social.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="p-3 text-blue-600 bg-blue-50 dark:bg-blue-900/20 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/40 hover:scale-110 transition-all duration-300"
+              title="LinkedIn"
+            >
+              <Linkedin size={18} />
+            </a>
+          )}
+          {author.social.website && (
+            <a
+              href={author.social.website}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="p-3 text-purple-600 bg-purple-50 dark:bg-purple-900/20 rounded-xl hover:bg-purple-100 dark:hover:bg-purple-900/40 hover:scale-110 transition-all duration-300"
+              title="Sitio web"
+            >
+              <Globe size={18} />
+            </a>
+          )}
+        </div>
+      )}
+
+      <!-- Acciones -->
+      <div class="space-y-3">
+        <Button 
+          href={`/blog?author=${encodeURIComponent(author.name)}`}
+          variant="primary"
+          size="md"
+          class="w-full"
+        >
+          Ver todos los posts
+        </Button>
+        {author.email && (
+          <Button 
+            href={`mailto:${author.email}`}
+            variant="outline"
+            size="md"
+            class="w-full"
+          >
+            <Mail size={16} class="mr-2" />
+            Contactar
+          </Button>
+        )}
+      </div>
+    </div>
+  </Card>
+) : (
+  <!-- Diseño card normal (mejorado) -->
+  <Card class="relative overflow-hidden group hover:shadow-lg transition-all duration-300">
+    <!-- Decoración superior -->
+    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-500 via-primary-600 to-primary-700"></div>
+    
+    <div class="p-6">
+      <!-- Header con avatar y info básica -->
+      <div class="flex items-start space-x-4 mb-4">
+        <!-- Avatar -->
+        <div class="relative flex-shrink-0">
+          {author.avatar ? (
+            <img
+              src={author.avatar}
+              alt={author.name}
+              class={`${config.avatar} rounded-full object-cover ring-2 ring-gray-100 dark:ring-gray-700 group-hover:ring-primary-200 dark:group-hover:ring-primary-600 transition-all duration-300`}
+              loading="lazy"
+            />
+          ) : (
+            <div class={`${config.avatar} rounded-full bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 flex items-center justify-center text-white font-semibold shadow-lg`}>
+              {author.name.charAt(0).toUpperCase()}
+            </div>
+          )}
+          <!-- Indicador de estado online -->
+          <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white dark:border-gray-800 rounded-full shadow-sm"></div>
+        </div>
+
+        <!-- Info básica -->
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center space-x-2 mb-1">
+            <h3 class={`font-bold text-gray-900 dark:text-white ${config.name} group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-300`}>
+              {author.name}
+            </h3>
+            <div class="flex items-center text-primary-500">
+              <Award size={14} />
+            </div>
+          </div>
+          
+          <!-- Metadata -->
+          <div class="flex items-center space-x-3 text-xs text-gray-500 dark:text-gray-400 mb-2">
+            <div class="flex items-center space-x-1">
+              <User size={12} />
+              <span>Autor</span>
+            </div>
+            <div class="flex items-center space-x-1">
+              <Calendar size={12} />
+              <span>Activo</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bio -->
+      {showBio && author.bio && (
+        <div class="mb-4">
+          <p class={`text-gray-600 dark:text-gray-400 ${config.bio} leading-relaxed line-clamp-3`}>
+            {author.bio}
+          </p>
+        </div>
+      )}
+
+      <!-- Redes sociales compactas -->
+      {author.social && (
+        <div class="flex flex-wrap gap-2 mb-4">
+          {author.social.twitter && (
+            <a
+              href={author.social.twitter}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center px-3 py-1.5 text-xs text-blue-600 bg-blue-50 dark:bg-blue-900/20 rounded-full hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors duration-300"
+              title="Twitter"
+            >
+              <Twitter size={12} class="mr-1" />
+              Twitter
+            </a>
+          )}
+          {author.social.github && (
+            <a
+              href={author.social.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center px-3 py-1.5 text-xs text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 rounded-full hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-300"
+              title="GitHub"
+            >
+              <Github size={12} class="mr-1" />
+              GitHub
+            </a>
+          )}
+          {author.social.linkedin && (
+            <a
+              href={author.social.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center px-3 py-1.5 text-xs text-blue-700 bg-blue-50 dark:bg-blue-900/20 rounded-full hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors duration-300"
+              title="LinkedIn"
+            >
+              <Linkedin size={12} class="mr-1" />
+              LinkedIn
+            </a>
+          )}
+        </div>
+      )}
+
+      <!-- Línea divisora -->
+      <div class="border-t border-gray-100 dark:border-gray-700 pt-4">
+        <!-- Acciones -->
+        <div class="flex items-center justify-between">
+          <Button 
+            href={`/blog?author=${encodeURIComponent(author.name)}`}
+            variant="outline"
+            size="sm"
+            class="text-xs"
+          >
+            Ver posts
+          </Button>
+          
+          {author.email && (
+            <a
+              href={`mailto:${author.email}`}
+              class="p-2 text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition-all duration-300"
+              title="Contactar"
+            >
+              <Mail size={16} />
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
+  </Card>
+)}
+
+<!-- Estilos adicionales -->
+<style>
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .author-card-hover {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .author-card-hover:hover {
+    transform: translateY(-2px);
+  }
+  
+  @keyframes pulse-ring {
+    0% {
+      transform: scale(0.8);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(2.4);
+      opacity: 0;
+    }
+  }
+  
+  .pulse-ring {
+    animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Agregar efectos interactivos
+    const authorCards = document.querySelectorAll('[class*="author-card"]');
+    
+    authorCards.forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        card.classList.add('author-card-hover');
+      });
+      
+      card.addEventListener('mouseleave', () => {
+        card.classList.remove('author-card-hover');
+      });
+    });
+  });
+</script>

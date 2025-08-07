@@ -8,19 +8,23 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "seed": "node --loader tsx/esm src/data/seed.ts"
+    "seed": "tsx scripts/seed.ts",
+    "db:setup": "tsx scripts/seed.ts",
+    "db:reset": "tsx scripts/reset.ts",
+    "db:test": "tsx scripts/test-db.ts"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.12",
     "@astrojs/sitemap": "^3.4.2",
     "@astrojs/tailwind": "^6.0.2",
+    "@supabase/supabase-js": "^2.54.0",
     "@tailwindcss/forms": "^0.5.9",
     "@tailwindcss/typography": "^0.5.15",
     "@types/node": "^22.10.7",
     "astro": "^5.2.5",
     "autoprefixer": "^10.4.20",
+    "dotenv": "^17.2.1",
     "lucide-astro": "^0.468.0",
-    "mongodb": "^6.12.0",
     "tailwindcss": "^3.4.17"
   },
   "devDependencies": {

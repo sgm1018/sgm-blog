@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - Nuevo Diseño PostHeader</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 p-6">
+    <div class="max-w-7xl mx-auto">
+        <h1 class="text-3xl font-bold text-gray-900 mb-8 text-center">Nuevo Diseño del PostHeader</h1>
+        
+        <!-- Simulación del nuevo layout -->
+        <div class="bg-white rounded-2xl p-8 shadow-lg">
+            <!-- Título del post (simulado) -->
+            <div class="mb-8">
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <span class="px-3 py-1 bg-primary-600 text-white text-sm font-semibold rounded-full">
+                        Desarrollo Web
+                    </span>
+                    <span class="px-3 py-1 bg-gray-200 text-gray-700 text-sm rounded-full">
+                        #React
+                    </span>
+                    <span class="px-3 py-1 bg-gray-200 text-gray-700 text-sm rounded-full">
+                        #JavaScript
+                    </span>
+                </div>
+                
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+                    Guía Completa de React Hooks 2024: Todo lo que Necesitas Saber
+                </h1>
+                
+                <p class="text-xl text-gray-600 leading-relaxed mb-8 max-w-3xl">
+                    Descubre cómo usar los React Hooks de manera efectiva en tus proyectos. Una guía completa con ejemplos prácticos y mejores prácticas.
+                </p>
+            </div>
+
+            <!-- Nuevo layout grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Autor Section (ocupa 2 columnas) -->
+                <div class="lg:col-span-2">
+                    <div class="relative overflow-hidden bg-white rounded-lg border border-gray-200">
+                        <!-- Header con gradiente -->
+                        <div class="absolute top-0 left-0 right-0 h-24 bg-gradient-to-r from-primary-500 via-primary-600 to-primary-700"></div>
+                        
+                        <div class="relative pt-16 pb-6 px-6">
+                            <!-- Avatar centrado -->
+                            <div class="flex justify-center mb-4">
+                                <div class="w-24 h-24 rounded-full bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center text-white font-bold text-2xl border-4 border-white shadow-xl">
+                                    S
+                                </div>
+                            </div>
+
+                            <!-- Información principal -->
+                            <div class="text-center mb-6">
+                                <h3 class="text-xl font-bold text-gray-900 mb-2">
+                                    Sergio González
+                                </h3>
+                                <p class="text-gray-600 leading-relaxed max-w-md mx-auto text-sm">
+                                    Desarrollador Full Stack con más de 5 años de experiencia en tecnologías web modernas.
+                                </p>
+                            </div>
+
+                            <!-- Estadísticas -->
+                            <div class="grid grid-cols-3 gap-4 mb-6 p-4 bg-gray-50 rounded-xl">
+                                <div class="text-center">
+                                    <div class="text-lg font-bold text-gray-900">12</div>
+                                    <div class="text-xs text-gray-500">Posts</div>
+                                </div>
+                                <div class="text-center border-x border-gray-200">
+                                    <div class="text-lg font-bold text-gray-900">1.2K</div>
+                                    <div class="text-xs text-gray-500">Lectores</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-lg font-bold text-gray-900">4.8</div>
+                                    <div class="text-xs text-gray-500">Rating</div>
+                                </div>
+                            </div>
+
+                            <!-- Acciones del autor -->
+                            <div class="space-y-3">
+                                <button class="w-full px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium">
+                                    Ver todos los posts
+                                </button>
+                                <button class="w-full flex items-center justify-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+                                        <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+                                    </svg>
+                                    Contactar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Post Stats & Actions (ocupa 1 columna) -->
+                <div class="space-y-4">
+                    <!-- Post Statistics -->
+                    <div class="bg-white rounded-xl p-6 border border-gray-200">
+                        <h3 class="text-sm font-semibold text-gray-900 mb-4 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                            </svg>
+                            Estadísticas del Post
+                        </h3>
+                        
+                        <div class="space-y-3">
+                            <!-- Fecha de publicación -->
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center text-gray-600">
+                                    <svg class="w-3.5 h-3.5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span class="text-sm">Publicado</span>
+                                </div>
+                                <span class="text-sm font-medium text-gray-900">
+                                    15 Nov 2024
+                                </span>
+                            </div>
+
+                            <!-- Tiempo de lectura -->
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center text-gray-600">
+                                    <svg class="w-3.5 h-3.5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span class="text-sm">Lectura</span>
+                                </div>
+                                <span class="text-sm font-medium text-gray-900">
+                                    8 min
+                                </span>
+                            </div>
+
+                            <!-- Vistas -->
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center text-gray-600">
+                                    <svg class="w-3.5 h-3.5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+                                        <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span class="text-sm">Vistas</span>
+                                </div>
+                                <span class="text-sm font-medium text-gray-900">
+                                    1,234
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Share Actions -->
+                    <div class="bg-white rounded-xl p-6 border border-gray-200">
+                        <h3 class="text-sm font-semibold text-gray-900 mb-4 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"/>
+                            </svg>
+                            Compartir
+                        </h3>
+                        
+                        <div class="space-y-2">
+                            <button class="w-full flex items-center px-3 py-2 text-blue-600 border border-blue-200 hover:bg-blue-50 rounded-lg transition-colors text-sm">
+                                <span class="mr-3">🐦</span>
+                                Twitter
+                            </button>
+                            
+                            <button class="w-full flex items-center px-3 py-2 text-blue-700 border border-blue-200 hover:bg-blue-50 rounded-lg transition-colors text-sm">
+                                <span class="mr-3">📘</span>
+                                Facebook
+                            </button>
+
+                            <button class="w-full flex items-center px-3 py-2 text-blue-800 border border-blue-200 hover:bg-blue-50 rounded-lg transition-colors text-sm">
+                                <span class="mr-3">💼</span>
+                                LinkedIn
+                            </button>
+
+                            <button class="w-full flex items-center px-3 py-2 text-purple-600 border border-purple-200 hover:bg-purple-50 rounded-lg transition-colors text-sm copy-link-demo">
+                                <span class="mr-3">🔗</span>
+                                Copiar enlace
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="bg-gradient-to-r from-primary-50 to-primary-100 rounded-xl p-6 border border-primary-200">
+                        <div class="space-y-3">
+                            <button class="w-full px-4 py-2 border border-primary-300 text-primary-700 rounded-lg hover:bg-primary-100 transition-colors text-sm font-medium">
+                                Más posts del autor
+                            </button>
+                            
+                            <button class="w-full px-4 py-2 text-primary-600 hover:bg-primary-100 rounded-lg transition-colors text-sm">
+                                Ver categoría: Desarrollo Web
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Descripción de mejoras -->
+        <div class="mt-12 bg-white rounded-lg p-6 shadow-lg">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Mejoras Implementadas en el PostHeader</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M3 4a1 1 0 011-1h4a1 1 0 010 2H6.414l2.293 2.293a1 1 0 01-1.414 1.414L5 6.414V8a1 1 0 01-2 0V4zm9 1a1 1 0 010-2h4a1 1 0 011 1v4a1 1 0 01-2 0V6.414l-2.293 2.293a1 1 0 11-1.414-1.414L13.586 5H12zm-9 7a1 1 0 012 0v1.586l2.293-2.293a1 1 0 111.414 1.414L6.414 15H8a1 1 0 010 2H4a1 1 0 01-1-1v-4zm13-1a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 010-2h1.586l-2.293-2.293a1 1 0 111.414-1.414L15 13.586V12a1 1 0 011-1z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-bold text-gray-900 text-lg mb-2">Layout Mejorado</h3>
+                    <p class="text-gray-600 text-sm">
+                        Grid responsive de 3 columnas que se adapta perfectamente a todos los dispositivos.
+                    </p>
+                </div>
+
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-bold text-gray-900 text-lg mb-2">Perfil de Autor</h3>
+                    <p class="text-gray-600 text-sm">
+                        Información completa del autor con estadísticas, bio y enlaces de contacto.
+                    </p>
+                </div>
+
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-bold text-gray-900 text-lg mb-2">Estadísticas</h3>
+                    <p class="text-gray-600 text-sm">
+                        Información del post organizada y fácil de leer con iconos identificativos.
+                    </p>
+                </div>
+
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-bold text-gray-900 text-lg mb-2">Compartir</h3>
+                    <p class="text-gray-600 text-sm">
+                        Botones de compartir verticales con mejor visibilidad y usabilidad.
+                    </p>
+                </div>
+
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-bold text-gray-900 text-lg mb-2">Acciones Rápidas</h3>
+                    <p class="text-gray-600 text-sm">
+                        Navegación intuitiva hacia más contenido del autor o categoría.
+                    </p>
+                </div>
+
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-bold text-gray-900 text-lg mb-2">Visual Atractivo</h3>
+                    <p class="text-gray-600 text-sm">
+                        Diseño moderno con gradientes, sombras y efectos hover para mejor experiencia.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Demo de copiar enlace
+        document.addEventListener('DOMContentLoaded', () => {
+            const copyBtn = document.querySelector('.copy-link-demo');
+            if (copyBtn) {
+                copyBtn.addEventListener('click', () => {
+                    const originalText = copyBtn.innerHTML;
+                    copyBtn.innerHTML = '<span class="mr-3">✅</span>¡Copiado!';
+                    copyBtn.classList.add('text-green-600', 'border-green-200');
+                    
+                    setTimeout(() => {
+                        copyBtn.innerHTML = originalText;
+                        copyBtn.classList.remove('text-green-600', 'border-green-200');
+                    }, 2000);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

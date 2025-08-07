@@ -1,0 +1,368 @@
+---
+import type { BlogPost } from '../../types/blog.types';
+import { User, MessageCircle, Heart, Reply } from 'lucide-astro';
+import Card from '../ui/Card.astro';
+import Button from '../ui/Button.astro';
+
+export interface Props {
+  post: BlogPost;
+}
+
+const { post } = Astro.props;
+
+// Comentarios de ejemplo (en una implementación real vendrían de la base de datos)
+const sampleComments = [
+  {
+    id: '1',
+    author: {
+      name: 'María García',
+      avatar: null,
+      email: 'maria@example.com'
+    },
+    content: 'Excelente artículo! Me ha ayudado mucho a entender el tema. ¿Podrías hacer uno sobre patrones avanzados?',
+    createdAt: new Date('2024-01-15'),
+    likes: 5,
+    replies: [
+      {
+        id: '2',
+        author: {
+          name: post.author.name,
+          avatar: post.author.avatar,
+          email: post.author.email
+        },
+        content: 'Gracias María! Me alegra que te haya sido útil. Definitivamente tengo planeado escribir sobre patrones avanzados pronto.',
+        createdAt: new Date('2024-01-16'),
+        likes: 2,
+        isAuthor: true
+      }
+    ]
+  },
+  {
+    id: '3',
+    author: {
+      name: 'Carlos López',
+      avatar: null,
+      email: 'carlos@example.com'
+    },
+    content: 'Muy bien explicado. Los ejemplos de código son muy claros y fáciles de seguir.',
+    createdAt: new Date('2024-01-17'),
+    likes: 3,
+    replies: []
+  }
+];
+
+function formatDate(date: Date): string {
+  const now = new Date();
+  const diffTime = Math.abs(now.getTime() - date.getTime());
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+  if (diffDays === 1) return 'hace 1 día';
+  if (diffDays < 7) return `hace ${diffDays} días`;
+  if (diffDays < 30) return `hace ${Math.floor(diffDays / 7)} semanas`;
+  
+  return date.toLocaleDateString('es-ES', { 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  });
+}
+---
+
+<section class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+  <div class="flex items-center justify-between mb-8">
+    <h3 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
+      <MessageCircle size={24} class="mr-3" />
+      Comentarios ({sampleComments.length + sampleComments.reduce((acc, comment) => acc + comment.replies.length, 0)})
+    </h3>
+  </div>
+
+  <!-- Formulario para nuevo comentario -->
+  <Card class="mb-8">
+    <form class="comment-form">
+      <div class="flex items-start space-x-4">
+        <div class="flex-shrink-0">
+          <div class="w-10 h-10 bg-gray-300 dark:bg-gray-600 rounded-full flex items-center justify-center">
+            <User size={20} class="text-gray-600 dark:text-gray-400" />
+          </div>
+        </div>
+        <div class="flex-1">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <input
+              type="text"
+              placeholder="Tu nombre"
+              required
+              class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            />
+            <input
+              type="email"
+              placeholder="Tu email (no será publicado)"
+              required
+              class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            />
+          </div>
+          <textarea
+            placeholder="Escribe tu comentario..."
+            required
+            rows="4"
+            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
+          ></textarea>
+          <div class="flex items-center justify-between mt-4">
+            <p class="text-sm text-gray-500 dark:text-gray-400">
+              Tu email no será publicado. Los campos requeridos están marcados *
+            </p>
+            <Button type="submit" variant="primary" size="md">
+              Publicar comentario
+            </Button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </Card>
+
+  <!-- Lista de comentarios -->
+  <div class="space-y-6">
+    {sampleComments.map((comment) => (
+      <Card class="comment-item" data-comment-id={comment.id}>
+        <!-- Comentario principal -->
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0">
+            {comment.author.avatar ? (
+              <img
+                src={comment.author.avatar}
+                alt={comment.author.name}
+                class="w-12 h-12 rounded-full object-cover"
+              />
+            ) : (
+              <div class="w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-700 rounded-full flex items-center justify-center text-white font-semibold">
+                {comment.author.name.charAt(0).toUpperCase()}
+              </div>
+            )}
+          </div>
+          
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center space-x-2 mb-2">
+              <h4 class="font-semibold text-gray-900 dark:text-white">
+                {comment.author.name}
+              </h4>
+              <span class="text-sm text-gray-500 dark:text-gray-400">
+                {formatDate(comment.createdAt)}
+              </span>
+            </div>
+            
+            <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+              {comment.content}
+            </p>
+            
+            <div class="flex items-center space-x-4">
+              <button class="like-btn flex items-center space-x-1 text-gray-500 hover:text-red-500 dark:text-gray-400 dark:hover:text-red-400 transition-colors">
+                <Heart size={16} />
+                <span class="text-sm">{comment.likes}</span>
+              </button>
+              
+              <button class="reply-btn text-sm text-gray-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400 transition-colors">
+                <Reply size={16} class="inline mr-1" />
+                Responder
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Respuestas -->
+        {comment.replies.length > 0 && (
+          <div class="mt-6 ml-16 space-y-4">
+            {comment.replies.map((reply) => (
+              <div class="flex items-start space-x-4 reply-item" data-reply-id={reply.id}>
+                <div class="flex-shrink-0">
+                  {reply.author.avatar ? (
+                    <img
+                      src={reply.author.avatar}
+                      alt={reply.author.name}
+                      class="w-10 h-10 rounded-full object-cover"
+                    />
+                  ) : (
+                    <div class="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-700 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                      {reply.author.name.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                </div>
+                
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center space-x-2 mb-2">
+                    <h5 class="font-semibold text-gray-900 dark:text-white">
+                      {reply.author.name}
+                    </h5>
+                    {reply.isAuthor && (
+                      <span class="px-2 py-1 bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 text-xs font-medium rounded-full">
+                        Autor
+                      </span>
+                    )}
+                    <span class="text-sm text-gray-500 dark:text-gray-400">
+                      {formatDate(reply.createdAt)}
+                    </span>
+                  </div>
+                  
+                  <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-3">
+                    {reply.content}
+                  </p>
+                  
+                  <button class="like-btn flex items-center space-x-1 text-gray-500 hover:text-red-500 dark:text-gray-400 dark:hover:text-red-400 transition-colors">
+                    <Heart size={14} />
+                    <span class="text-sm">{reply.likes}</span>
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <!-- Formulario de respuesta (oculto por defecto) -->
+        <div class="reply-form-container mt-6 ml-16 hidden">
+          <Card class="bg-gray-50 dark:bg-gray-800">
+            <form class="reply-form">
+              <div class="flex items-start space-x-3">
+                <div class="flex-shrink-0">
+                  <div class="w-8 h-8 bg-gray-300 dark:bg-gray-600 rounded-full flex items-center justify-center">
+                    <User size={16} class="text-gray-600 dark:text-gray-400" />
+                  </div>
+                </div>
+                <div class="flex-1">
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                    <input
+                      type="text"
+                      placeholder="Tu nombre"
+                      required
+                      class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-primary-500"
+                    />
+                    <input
+                      type="email"
+                      placeholder="Tu email"
+                      required
+                      class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-primary-500"
+                    />
+                  </div>
+                  <textarea
+                    placeholder="Escribe tu respuesta..."
+                    required
+                    rows="3"
+                    class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-primary-500 resize-none"
+                  ></textarea>
+                  <div class="flex items-center justify-end space-x-3 mt-3">
+                    <Button variant="ghost" size="sm" class="cancel-reply">
+                      Cancelar
+                    </Button>
+                    <Button type="submit" variant="primary" size="sm">
+                      Responder
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </Card>
+        </div>
+      </Card>
+    ))}
+  </div>
+
+  <!-- Mensaje si no hay comentarios -->
+  {sampleComments.length === 0 && (
+    <div class="text-center py-12">
+      <MessageCircle size={48} class="mx-auto text-gray-400 dark:text-gray-600 mb-4" />
+      <h4 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+        Sé el primero en comentar
+      </h4>
+      <p class="text-gray-600 dark:text-gray-400">
+        ¿Qué te pareció este artículo? ¡Nos encantaría conocer tu opinión!
+      </p>
+    </div>
+  )}
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Manejar likes en comentarios
+    const likeButtons = document.querySelectorAll('.like-btn');
+    likeButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const heart = button.querySelector('svg');
+        const count = button.querySelector('span');
+        
+        // Toggle like visual
+        if (button.classList.contains('liked')) {
+          button.classList.remove('liked');
+          heart.classList.remove('text-red-500', 'fill-current');
+          if (count) {
+            count.textContent = (parseInt(count.textContent) - 1).toString();
+          }
+        } else {
+          button.classList.add('liked');
+          heart.classList.add('text-red-500', 'fill-current');
+          if (count) {
+            count.textContent = (parseInt(count.textContent) + 1).toString();
+          }
+        }
+        
+        // Aquí enviarías la solicitud al servidor
+        // fetch('/api/comments/like', { ... })
+      });
+    });
+
+    // Manejar botones de respuesta
+    const replyButtons = document.querySelectorAll('.reply-btn');
+    replyButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const commentItem = button.closest('.comment-item');
+        const replyForm = commentItem?.querySelector('.reply-form-container');
+        
+        if (replyForm) {
+          replyForm.classList.toggle('hidden');
+          if (!replyForm.classList.contains('hidden')) {
+            const textarea = replyForm.querySelector('textarea');
+            textarea?.focus();
+          }
+        }
+      });
+    });
+
+    // Manejar cancelar respuesta
+    const cancelButtons = document.querySelectorAll('.cancel-reply');
+    cancelButtons.forEach(button => {
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        const replyForm = button.closest('.reply-form-container');
+        replyForm?.classList.add('hidden');
+      });
+    });
+
+    // Manejar envío de comentarios
+    const commentForms = document.querySelectorAll('.comment-form, .reply-form');
+    commentForms.forEach(form => {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const htmlForm = form as HTMLFormElement;
+        
+        // Aquí enviarías el comentario al servidor
+        // const formData = new FormData(htmlForm);
+        // await fetch('/api/comments', { method: 'POST', body: formData });
+        
+        // Mostrar mensaje de éxito temporalmente
+        const button = htmlForm.querySelector('button[type="submit"]') as HTMLButtonElement;
+        const originalText = button?.textContent;
+        if (button) {
+          button.textContent = '¡Enviado!';
+          button.disabled = true;
+          setTimeout(() => {
+            button.textContent = originalText;
+            button.disabled = false;
+            htmlForm.reset();
+            
+            // Ocultar formulario de respuesta si es uno
+            const replyContainer = htmlForm.closest('.reply-form-container');
+            if (replyContainer) {
+              replyContainer.classList.add('hidden');
+            }
+          }, 2000);
+        }
+      });
+    });
+  });
+</script>

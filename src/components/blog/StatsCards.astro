@@ -1,0 +1,67 @@
+---
+// Componente que muestra estadísticas divertidas para la página 404
+---
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-12">
+  <!-- Estadística 1 -->
+  <div class="text-center p-6 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-xl">
+    <div class="text-3xl mb-2">🔍</div>
+    <div class="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-1" data-counter="1234">0</div>
+    <div class="text-sm text-gray-600 dark:text-gray-400">
+      Búsquedas exitosas este mes
+    </div>
+  </div>
+
+  <!-- Estadística 2 -->
+  <div class="text-center p-6 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-xl">
+    <div class="text-3xl mb-2">📚</div>
+    <div class="text-2xl font-bold text-green-600 dark:text-green-400 mb-1" data-counter="156">0</div>
+    <div class="text-sm text-gray-600 dark:text-gray-400">
+      Artículos publicados
+    </div>
+  </div>
+
+  <!-- Estadística 3 -->
+  <div class="text-center p-6 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-xl">
+    <div class="text-3xl mb-2">💡</div>
+    <div class="text-2xl font-bold text-purple-600 dark:text-purple-400 mb-1" data-counter="42">0</div>
+    <div class="text-sm text-gray-600 dark:text-gray-400">
+      Tips y trucos compartidos
+    </div>
+  </div>
+</div>
+
+<script>
+  // Animación de contadores
+  document.addEventListener('DOMContentLoaded', () => {
+    const counters = document.querySelectorAll('[data-counter]');
+    
+    const animateCounter = (counter: Element) => {
+      const target = parseInt(counter.getAttribute('data-counter') || '0');
+      let current = 0;
+      const increment = target / 50; // 50 pasos para la animación
+      const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+          current = target;
+          clearInterval(timer);
+        }
+        counter.textContent = Math.floor(current).toString();
+      }, 30);
+    };
+
+    // Observer para animar cuando entren en viewport
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animateCounter(entry.target);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    counters.forEach(counter => {
+      observer.observe(counter);
+    });
+  });
+</script>

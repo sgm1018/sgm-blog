@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test PostCard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-md mx-auto">
+        <!-- Ejemplo de PostCard mejorado -->
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+            <article class="h-full flex flex-col">
+                <!-- Imagen destacada -->
+                <div class="relative overflow-hidden h-48">
+                    <img src="https://picsum.photos/400/200" alt="Post example" 
+                         class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                </div>
+
+                <div class="p-6 flex-1 flex flex-col">
+                    <!-- Categories and Tags -->
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="px-2 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">Tecnología</span>
+                        <span class="px-2 py-1 bg-gray-100 text-gray-700 text-sm rounded-full">#JavaScript</span>
+                        <span class="px-2 py-1 bg-gray-100 text-gray-700 text-sm rounded-full">#React</span>
+                    </div>
+
+                    <!-- Title and Excerpt -->
+                    <h2 class="font-bold text-gray-900 mb-3 text-xl hover:text-blue-600 transition-colors">
+                        <a href="#" class="block">Título del artículo de ejemplo</a>
+                    </h2>
+
+                    <p class="text-gray-600 mb-6 flex-1 text-base">
+                        Este es un extracto del artículo que muestra de qué se trata el contenido...
+                    </p>
+
+                    <!-- Author Section - MEJORADO -->
+                    <div class="space-y-4 mb-4">
+                        <!-- Author -->
+                        <div class="flex items-center space-x-3">
+                            <div class="flex-shrink-0">
+                                <img src="https://picsum.photos/40/40" alt="Autor" 
+                                     class="w-10 h-10 rounded-full object-cover border-2 border-gray-200">
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-900 truncate">
+                                    Nombre del Autor
+                                </p>
+                                <p class="text-xs text-gray-500 truncate">
+                                    Desarrollador Full Stack especializado...
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Post Meta -->
+                        <div class="flex items-center justify-between text-sm text-gray-500">
+                            <div class="flex items-center space-x-4">
+                                <div class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                    <span>15 Jan 2024</span>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <span>5 min</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Read More Button -->
+                    <button class="self-start px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors flex items-center group">
+                        Leer más
+                        <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </button>
+                </div>
+            </article>
+        </div>
+    </div>
+
+    <div class="mt-8 max-w-4xl mx-auto">
+        <!-- Ejemplo de Table of Contents mejorado -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                <span class="mr-2">📑</span>
+                Tabla de contenidos
+            </h3>
+            
+            <nav class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                <ul class="space-y-2 text-sm">
+                    <li>
+                        <a href="#introduccion" class="block py-1 px-2 text-gray-900 font-semibold hover:text-blue-600 hover:bg-blue-50 rounded transition-all duration-200">
+                            Introducción
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#desarrollo" class="block py-1 px-2 text-gray-600 font-medium hover:text-blue-600 hover:bg-blue-50 rounded transition-all duration-200" style="padding-left: 20px;">
+                            Desarrollo de la aplicación
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#configuracion" class="block py-1 px-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-all duration-200" style="padding-left: 32px;">
+                            Configuración inicial
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#componentes" class="block py-1 px-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-all duration-200" style="padding-left: 32px;">
+                            Creación de componentes
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#conclusion" class="block py-1 px-2 text-gray-600 font-medium hover:text-blue-600 hover:bg-blue-50 rounded transition-all duration-200" style="padding-left: 20px;">
+                            Conclusión
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Progress indicator -->
+            <div class="mt-4 bg-gray-200 rounded-full h-2 overflow-hidden">
+                <div class="bg-blue-600 h-full rounded-full transition-all duration-300 ease-out" style="width: 30%"></div>
+            </div>
+            
+            <div class="text-xs text-gray-500 mt-2 text-center">
+                Progreso de lectura
+            </div>
+        </div>
+
+        <!-- Simulación de contenido para testing -->
+        <div class="mt-8 bg-white rounded-lg shadow-lg p-8 prose max-w-none">
+            <h1 id="introduccion" style="scroll-margin-top: 100px;">Introducción</h1>
+            <p>Este es el contenido de la introducción. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            
+            <h2 id="desarrollo" style="scroll-margin-top: 100px;">Desarrollo de la aplicación</h2>
+            <p>Contenido sobre el desarrollo. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            
+            <h3 id="configuracion" style="scroll-margin-top: 100px;">Configuración inicial</h3>
+            <p>Detalles sobre la configuración. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+            
+            <h3 id="componentes" style="scroll-margin-top: 100px;">Creación de componentes</h3>
+            <p>Información sobre componentes. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum.</p>
+            
+            <h2 id="conclusion" style="scroll-margin-top: 100px;">Conclusión</h2>
+            <p>Resumen final. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt.</p>
+        </div>
+    </div>
+
+    <script>
+        // Script para testing de la tabla de contenidos
+        document.addEventListener('DOMContentLoaded', () => {
+            const tocLinks = document.querySelectorAll('nav a[href^="#"]');
+            
+            tocLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href').substring(1);
+                    const target = document.getElementById(targetId);
+                    
+                    if (target) {
+                        const headerHeight = 80;
+                        const targetTop = target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+                        
+                        // Highlight effect
+                        target.style.background = '#dbeafe';
+                        target.style.padding = '1rem';
+                        target.style.borderRadius = '0.5rem';
+                        target.style.transition = 'all 0.3s ease';
+                        
+                        setTimeout(() => {
+                            target.style.background = 'transparent';
+                            target.style.padding = '0';
+                        }, 2000);
+                        
+                        window.scrollTo({
+                            top: targetTop,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

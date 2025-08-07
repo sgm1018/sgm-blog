@@ -1,0 +1,366 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/ui/Button.astro';
+import Card from '../components/ui/Card.astro';
+import StatsCards from '../components/blog/StatsCards.astro';
+import FunMessage from '../components/blog/FunMessage.astro';
+import { Home, ArrowLeft, Search, BookOpen, Coffee } from 'lucide-astro';
+
+// Posts populares o recientes para sugerir (en una implementación real vendrían de la BD)
+const suggestedPosts = [
+  {
+    title: "Introducción a TypeScript para JavaScript Developers",
+    slug: "introduccion-typescript-javascript",
+    excerpt: "Aprende los fundamentos de TypeScript y cómo puede mejorar tu código JavaScript."
+  },
+  {
+    title: "Mejores Prácticas en React 2024",
+    slug: "mejores-practicas-react-2024", 
+    excerpt: "Descubre las técnicas más actuales para escribir código React limpio y eficiente."
+  },
+  {
+    title: "Guía Completa de Astro Framework",
+    slug: "guia-completa-astro-framework",
+    excerpt: "Todo lo que necesitas saber sobre Astro para crear sitios web ultrarrápidos."
+  }
+];
+
+const categories = [
+  { name: "JavaScript", slug: "javascript", count: 24 },
+  { name: "React", slug: "react", count: 18 },
+  { name: "Node.js", slug: "nodejs", count: 15 },
+  { name: "CSS", slug: "css", count: 12 },
+  { name: "TypeScript", slug: "typescript", count: 10 }
+];
+---
+
+<BaseLayout 
+  title="404 - Página no encontrada"
+  description="La página que buscas no existe. Explora nuestro contenido de desarrollo web, JavaScript, React y más."
+>
+  <div class="min-h-screen flex items-center justify-center px-4 py-16">
+    <div class="max-w-6xl mx-auto text-center">
+      
+      <!-- Ilustración y mensaje principal -->
+      <div class="mb-12">
+        <!-- Número 404 grande y estilizado -->
+        <div class="relative mb-8">
+          <h1 class="text-9xl md:text-[12rem] font-black text-primary-100 dark:text-primary-900/30 select-none">
+            404
+          </h1>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="text-6xl mb-4">🔍</div>
+          </div>
+        </div>
+
+        <!-- Mensaje principal -->
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+          ¡Oops! Página no encontrada
+        </h2>
+        
+        <p class="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto">
+          Parece que la página que buscas se fue de vacaciones o decidió cambiar de dirección. 
+          Pero no te preocupes, ¡tenemos muchas otras cosas interesantes para ti!
+        </p>
+
+        <!-- Mensaje divertido aleatorio -->
+        <FunMessage />
+
+        <!-- Botones de acción principales -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
+          <Button href="/" variant="primary" size="lg" class="min-w-[200px]">
+            <Home size={20} />
+            <span class="ml-2">Ir al inicio</span>
+          </Button>
+          
+          <Button href="/blog" variant="outline" size="lg" class="min-w-[200px]">
+            <BookOpen size={20} />
+            <span class="ml-2">Ver el blog</span>
+          </Button>
+          
+          <Button variant="ghost" size="lg" class="min-w-[200px] back-button">
+            <ArrowLeft size={20} />
+            <span class="ml-2">Volver atrás</span>
+          </Button>
+        </div>
+      </div>
+
+      <!-- Estadísticas divertidas -->
+      <StatsCards />
+
+      <!-- Buscador -->
+      <div class="mb-16">
+        <Card class="max-w-2xl mx-auto">
+          <div class="text-center mb-6">
+            <Search size={32} class="mx-auto text-primary-600 dark:text-primary-400 mb-3" />
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+              ¿Buscabas algo específico?
+            </h3>
+            <p class="text-gray-600 dark:text-gray-400">
+              Prueba buscar en nuestro blog
+            </p>
+          </div>
+          
+          <form class="search-form" action="/blog" method="get">
+            <div class="flex flex-col sm:flex-row gap-3">
+              <div class="flex-1">
+                <input
+                  type="text"
+                  name="q"
+                  placeholder="Buscar artículos, tutoriales, guías..."
+                  class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  required
+                />
+              </div>
+              <Button type="submit" variant="primary" size="lg" class="px-8">
+                <Search size={18} />
+                <span class="ml-2 hidden sm:inline">Buscar</span>
+              </Button>
+            </div>
+          </form>
+        </Card>
+      </div>
+
+      <!-- Grid de contenido sugerido -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+        
+        <!-- Posts populares -->
+        <Card>
+          <div class="text-left">
+            <div class="flex items-center mb-6">
+              <div class="p-2 bg-primary-100 dark:bg-primary-900 rounded-lg mr-3">
+                <Coffee size={24} class="text-primary-600 dark:text-primary-400" />
+              </div>
+              <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                Artículos populares
+              </h3>
+            </div>
+            
+            <div class="space-y-4">
+              {suggestedPosts.map((post) => (
+                <a 
+                  href={`/blog/${post.slug}`}
+                  class="block p-4 rounded-lg bg-gray-50 dark:bg-gray-700 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors group"
+                >
+                  <h4 class="font-medium text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 mb-2">
+                    {post.title}
+                  </h4>
+                  <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
+                    {post.excerpt}
+                  </p>
+                </a>
+              ))}
+            </div>
+            
+            <div class="mt-6 text-center">
+              <Button href="/blog" variant="outline" size="md">
+                Ver todos los artículos
+              </Button>
+            </div>
+          </div>
+        </Card>
+
+        <!-- Categorías -->
+        <Card>
+          <div class="text-left">
+            <div class="flex items-center mb-6">
+              <div class="p-2 bg-accent-100 dark:bg-accent-900 rounded-lg mr-3">
+                <BookOpen size={24} class="text-accent-600 dark:text-accent-400" />
+              </div>
+              <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                Explora por categorías
+              </h3>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {categories.map((category) => (
+                <a
+                  href={`/blog?category=${category.slug}`}
+                  class="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-700 hover:bg-accent-50 dark:hover:bg-accent-900/20 transition-colors group"
+                >
+                  <span class="font-medium text-gray-900 dark:text-white group-hover:text-accent-600 dark:group-hover:text-accent-400">
+                    {category.name}
+                  </span>
+                  <span class="text-sm text-gray-500 dark:text-gray-400 bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded-full">
+                    {category.count}
+                  </span>
+                </a>
+              ))}
+            </div>
+            
+            <div class="mt-6 text-center">
+              <Button href="/blog" variant="outline" size="md">
+                Ver todas las categorías
+              </Button>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      <!-- Mensaje de ayuda -->
+      <Card class="max-w-3xl mx-auto bg-gradient-to-r from-primary-50 to-primary-100 dark:from-primary-900/20 dark:to-primary-800/20 border-primary-200 dark:border-primary-800">
+        <div class="text-center">
+          <div class="text-4xl mb-4">🚀</div>
+          <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">
+            ¿Necesitas ayuda?
+          </h3>
+          <p class="text-gray-700 dark:text-gray-300 mb-6">
+            Si llegaste aquí por un enlace roto o crees que debería existir esta página, 
+            no dudes en contactarnos. Nos encanta recibir feedback de nuestra comunidad.
+          </p>
+          
+          <div class="flex flex-col sm:flex-row gap-3 justify-center">
+            <Button href="mailto:contacto@devblog.com" variant="primary" size="md">
+              📧 Contactar soporte
+            </Button>
+            <Button href="https://github.com/tu-usuario/tu-repo/issues" variant="outline" size="md" target="_blank">
+              🐛 Reportar problema
+            </Button>
+          </div>
+        </div>
+      </Card>
+
+      <!-- Enlaces útiles en el footer -->
+      <div class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-700">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-sm">
+          <div>
+            <h4 class="font-semibold text-gray-900 dark:text-white mb-3">Contenido</h4>
+            <ul class="space-y-2 text-gray-600 dark:text-gray-400">
+              <li><a href="/blog" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Blog</a></li>
+              <li><a href="/blog?category=tutoriales" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Tutoriales</a></li>
+              <li><a href="/blog?category=guias" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Guías</a></li>
+            </ul>
+          </div>
+          
+          <div>
+            <h4 class="font-semibold text-gray-900 dark:text-white mb-3">Tecnologías</h4>
+            <ul class="space-y-2 text-gray-600 dark:text-gray-400">
+              <li><a href="/blog?tag=javascript" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">JavaScript</a></li>
+              <li><a href="/blog?tag=react" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">React</a></li>
+              <li><a href="/blog?tag=nodejs" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Node.js</a></li>
+            </ul>
+          </div>
+          
+          <div>
+            <h4 class="font-semibold text-gray-900 dark:text-white mb-3">Recursos</h4>
+            <ul class="space-y-2 text-gray-600 dark:text-gray-400">
+              <li><a href="/sitemap.xml" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Sitemap</a></li>
+              <li><a href="/rss.xml" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">RSS</a></li>
+              <li><a href="/about" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Acerca de</a></li>
+            </ul>
+          </div>
+          
+          <div>
+            <h4 class="font-semibold text-gray-900 dark:text-white mb-3">Legal</h4>
+            <ul class="space-y-2 text-gray-600 dark:text-gray-400">
+              <li><a href="/privacy" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Privacidad</a></li>
+              <li><a href="/terms" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Términos</a></li>
+              <li><a href="/cookies" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Cookies</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>
+
+<script>
+  // Agregar algo de interactividad
+  document.addEventListener('DOMContentLoaded', () => {
+    // Handler para botón de volver atrás
+    const backButton = document.querySelector('.back-button');
+    if (backButton) {
+      backButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (window.history.length > 1) {
+          window.history.back();
+        } else {
+          window.location.href = '/';
+        }
+      });
+    }
+
+    // Animar el número 404
+    const title404 = document.querySelector('h1');
+    if (title404) {
+      title404.style.opacity = '0';
+      title404.style.transform = 'scale(0.8)';
+      
+      setTimeout(() => {
+        title404.style.transition = 'all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+        title404.style.opacity = '1';
+        title404.style.transform = 'scale(1)';
+      }, 200);
+    }
+
+    // Focus automático en el buscador después de un momento
+    setTimeout(() => {
+      const searchInput = document.querySelector('input[name="q"]') as HTMLInputElement;
+      if (searchInput && window.innerWidth > 768) {
+        searchInput.focus();
+      }
+    }, 1000);
+
+    // Sugerencias de búsqueda basadas en términos comunes
+    const searchInput = document.querySelector('input[name="q"]') as HTMLInputElement;
+    if (searchInput) {
+      const suggestions = [
+        'JavaScript async/await',
+        'React hooks',
+        'CSS Grid',
+        'TypeScript interfaces',
+        'Node.js API',
+        'Responsive design',
+        'Performance web'
+      ];
+
+      let suggestionIndex = 0;
+      const rotateSuggestions = () => {
+        if (searchInput.value === '' && document.activeElement !== searchInput) {
+          searchInput.placeholder = `Ej: ${suggestions[suggestionIndex]}`;
+          suggestionIndex = (suggestionIndex + 1) % suggestions.length;
+        }
+      };
+
+      // Rotar sugerencias cada 3 segundos
+      setInterval(rotateSuggestions, 3000);
+    }
+
+    // Easter egg: Konami code
+    const konamiCode: number[] = [];
+    const konamiSequence = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65]; // ↑↑↓↓←→←→BA
+    
+    document.addEventListener('keydown', (e) => {
+      konamiCode.push(e.keyCode);
+      if (konamiCode.length > konamiSequence.length) {
+        konamiCode.shift();
+      }
+      
+      if (konamiCode.join(',') === konamiSequence.join(',')) {
+        // Easter egg activado
+        document.body.style.animation = 'rainbow 2s infinite';
+        setTimeout(() => {
+          document.body.style.animation = '';
+          alert('🎉 ¡Easter egg encontrado! Eres un verdadero developer.');
+        }, 2000);
+      }
+    });
+  });
+</script>
+
+<style>
+  @keyframes rainbow {
+    0% { filter: hue-rotate(0deg); }
+    50% { filter: hue-rotate(180deg); }
+    100% { filter: hue-rotate(360deg); }
+  }
+</style>

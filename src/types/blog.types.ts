@@ -1,23 +1,27 @@
 export interface BlogPost {
   _id?: string;
   title: string;
-  slug: string;
+  slug: string; 
   excerpt: string;
   content: string;
   author: Author;
-  publishedAt: Date;
+  publishedAt: Date | null;
   updatedAt: Date;
+  createdAt: Date;
   featuredImage?: string;
-  categories: Category[];
+  category: Category;
   tags: Tag[];
   readingTime: number;
-  isPublished: boolean;
-  seo: SEOData;
+  published: boolean;
+  views: number;
+  metaDescription?: string;
+  metaKeywords?: string;
 }
 
 export interface Author {
+  _id?: string;
   name: string;
-  email: string;
+  email?: string;
   avatar?: string;
   bio?: string;
   social?: SocialLinks;
@@ -36,12 +40,15 @@ export interface Category {
   slug: string;
   description?: string;
   color: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface Tag {
   _id?: string;
   name: string;
   slug: string;
+  color: string;
   count?: number;
 }
 

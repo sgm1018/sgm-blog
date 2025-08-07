@@ -5,66 +5,47 @@ import SearchBar from '../../components/blog/SearchBar.astro';
 import Pagination from '../../components/blog/Pagination.astro';
 import Badge from '../../components/ui/Badge.astro';
 import { BookOpen, TrendingUp } from 'lucide-astro';
+import { BlogService } from '../../lib/blog-service';
 
-// In a real app, this would come from the API/database
-const mockPosts = [
-  {
-    _id: '1',
-    title: 'Introducción a React Server Components',
-    slug: 'intro-react-server-components',
-    excerpt: 'Descubre el nuevo paradigma de React que permite renderizado híbrido entre servidor y cliente.',
-    content: '',
-    author: { name: 'Juan Pérez', email: 'juan@example.com' },
-    publishedAt: new Date('2025-01-10'),
-    updatedAt: new Date('2025-01-10'),
-    featuredImage: 'https://images.pexels.com/photos/1181677/pexels-photo-1181677.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&dpr=2',
-    categories: [{ name: 'Frontend', slug: 'frontend', color: '#3b82f6' }],
-    tags: [{ name: 'React', slug: 'react' }, { name: 'SSR', slug: 'ssr' }],
-    readingTime: 8,
-    isPublished: true,
-    seo: { keywords: [] }
-  },
-  {
-    _id: '2',
-    title: 'Docker para Desarrolladores: Guía Completa',
-    slug: 'docker-desarrolladores-guia',
-    excerpt: 'Todo lo que necesitas saber sobre Docker para mejorar tu flujo de desarrollo.',
-    content: '',
-    author: { name: 'María García', email: 'maria@example.com' },
-    publishedAt: new Date('2025-01-08'),
-    updatedAt: new Date('2025-01-08'),
-    featuredImage: 'https://images.pexels.com/photos/546819/pexels-photo-546819.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&dpr=2',
-    categories: [{ name: 'DevOps', slug: 'devops', color: '#7c3aed' }],
-    tags: [{ name: 'Docker', slug: 'docker' }, { name: 'Containers', slug: 'containers' }],
-    readingTime: 12,
-    isPublished: true,
-    seo: { keywords: [] }
-  },
-  {
-    _id: '3',
-    title: 'TypeScript 5.0: Nuevas Características',
-    slug: 'typescript-5-nuevas-caracteristicas',
-    excerpt: 'Explora las mejoras y nuevas funcionalidades que trae TypeScript 5.0.',
-    content: '',
-    author: { name: 'Carlos López', email: 'carlos@example.com' },
-    publishedAt: new Date('2025-01-06'),
-    updatedAt: new Date('2025-01-06'),
-    featuredImage: 'https://images.pexels.com/photos/4164418/pexels-photo-4164418.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&dpr=2',
-    categories: [{ name: 'Backend', slug: 'backend', color: '#059669' }],
-    tags: [{ name: 'TypeScript', slug: 'typescript' }, { name: 'JavaScript', slug: 'javascript' }],
-    readingTime: 6,
-    isPublished: true,
-    seo: { keywords: [] }
-  }
-];
+// Obtener datos desde Supabase
+let posts: any[] = [];
+let categories: any[] = [];
+let featuredPosts: any[] = [];
 
-const mockPagination = {
-  page: 1,
-  limit: 10,
-  total: 25,
-  totalPages: 3,
-  hasNext: true,
-  hasPrev: false
+try {
+  // Obtener posts publicados
+  posts = await BlogService.getPublishedPosts();
+  
+  // Obtener categorías
+  categories = await BlogService.getCategories();
+  
+  // Obtener posts destacados
+  featuredPosts = await BlogService.getFeaturedPosts(3);
+} catch (error) {
+  console.error('Error fetching blog data:', error);
+  // Fallback con datos vacíos
+  posts = [];
+  categories = [];
+  featuredPosts = [];
+}
+
+// Configuración de paginación
+const currentPage = 1;
+const postsPerPage = 12;
+const totalPosts = posts.length;
+const totalPages = Math.ceil(totalPosts / postsPerPage);
+const paginatedPosts = posts.slice((currentPage - 1) * postsPerPage, currentPage * postsPerPage);
+
+const pagination = {
+  page: currentPage,
+  currentPage,
+  totalPages,
+  limit: postsPerPage,
+  total: totalPosts,
+  hasNext: currentPage < totalPages,
+  hasPrev: currentPage > 1,
+  nextUrl: currentPage < totalPages ? `/blog/page/${currentPage + 1}` : null,
+  prevUrl: currentPage > 1 ? `/blog/page/${currentPage - 1}` : null
 };
 
 // Page title and meta
@@ -118,7 +99,7 @@ const pageDescription = 'Explora todos nuestros artículos sobre desarrollo de s
         <div class="flex items-center space-x-8 text-sm">
           <div class="flex items-center space-x-2">
             <div class="w-2 h-2 bg-green-400 rounded-full"></div>
-            <span class="text-gray-400">{mockPagination.total} artículos publicados</span>
+            <span class="text-gray-400">{totalPosts} artículos publicados</span>
           </div>
           <div class="flex items-center space-x-2">
             <div class="w-2 h-2 bg-blue-400 rounded-full"></div>
@@ -145,7 +126,7 @@ const pageDescription = 'Explora todos nuestros artículos sobre desarrollo de s
             Últimos Artículos
           </h2>
           <p class="text-gray-600 dark:text-gray-400">
-            Página {mockPagination.page} de {mockPagination.totalPages}
+            Página {pagination.currentPage} de {pagination.totalPages}
           </p>
         </div>
         
@@ -159,16 +140,16 @@ const pageDescription = 'Explora todos nuestros artículos sobre desarrollo de s
         </div>
       </div>
 
-      {mockPosts.length > 0 ? (
+      {paginatedPosts.length > 0 ? (
         <>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-            {mockPosts.map((post) => (
+            {paginatedPosts.map((post) => (
               <PostCard post={post} />
             ))}
           </div>
           
           <Pagination 
-            pagination={mockPagination} 
+            pagination={pagination} 
             baseUrl="/blog" 
           />
         </>
@@ -181,7 +162,7 @@ const pageDescription = 'Explora todos nuestros artículos sobre desarrollo de s
             No hay artículos disponibles
           </h3>
           <p class="text-gray-600 dark:text-gray-400 mb-6">
-            Los artículos aparecerán aquí cuando estén disponibles.
+            Los artículos aparecerán aquí cuando configures Supabase y tengas contenido en tu base de datos.
           </p>
         </div>
       )}

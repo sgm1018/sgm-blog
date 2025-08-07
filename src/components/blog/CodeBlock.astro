@@ -1,0 +1,158 @@
+---
+import { Copy, Check } from 'lucide-astro';
+
+export interface Props {
+  code: string;
+  language?: string;
+  filename?: string;
+  class?: string;
+}
+
+const { code, language = 'text', filename, class: className = '' } = Astro.props;
+
+// Mapear algunos lenguajes comunes a nombres más amigables
+const languageMap: Record<string, string> = {
+  js: 'JavaScript',
+  ts: 'TypeScript',
+  jsx: 'React JSX',
+  tsx: 'React TSX',
+  html: 'HTML',
+  css: 'CSS',
+  scss: 'SCSS',
+  json: 'JSON',
+  md: 'Markdown',
+  py: 'Python',
+  bash: 'Bash',
+  sh: 'Shell',
+  sql: 'SQL',
+  yaml: 'YAML',
+  yml: 'YAML',
+  xml: 'XML',
+  php: 'PHP',
+  java: 'Java',
+  cpp: 'C++',
+  c: 'C',
+  go: 'Go',
+  rust: 'Rust',
+  swift: 'Swift',
+  kotlin: 'Kotlin',
+  dart: 'Dart',
+  astro: 'Astro',
+};
+
+const displayLanguage = languageMap[language] || language.toUpperCase();
+---
+
+<div class={`code-block-container ${className}`}>
+  <!-- Header del bloque de código -->
+  <div class="flex items-center justify-between bg-gray-100 dark:bg-gray-800 px-4 py-3 rounded-t-xl border border-gray-200 dark:border-gray-700">
+    <div class="flex items-center space-x-3">
+      <!-- Dots de ventana -->
+      <div class="flex space-x-1">
+        <div class="w-3 h-3 bg-red-400 rounded-full"></div>
+        <div class="w-3 h-3 bg-yellow-400 rounded-full"></div>
+        <div class="w-3 h-3 bg-green-400 rounded-full"></div>
+      </div>
+      
+      <!-- Información del archivo/lenguaje -->
+      <div class="flex items-center space-x-2">
+        {filename && (
+          <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+            {filename}
+          </span>
+        )}
+        <span class="inline-flex items-center px-2 py-1 text-xs font-medium bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-200 rounded-md">
+          {displayLanguage}
+        </span>
+      </div>
+    </div>
+    
+    <!-- Botón de copiar -->
+    <button
+      type="button"
+      class="copy-code-btn flex items-center space-x-1 px-2 py-1 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md transition-colors"
+      data-code={code}
+      title="Copiar código"
+    >
+      <Copy size={14} class="copy-icon" />
+      <Check size={14} class="check-icon hidden" />
+      <span class="copy-text">Copiar</span>
+    </button>
+  </div>
+  
+  <!-- Contenido del código -->
+  <div class="relative">
+    <pre class="bg-gray-900 dark:bg-gray-950 text-gray-100 p-4 rounded-b-xl border-x border-b border-gray-200 dark:border-gray-700 overflow-x-auto text-sm leading-relaxed"><code class={`language-${language}`} set:html={code}></code></pre>
+  </div>
+</div>
+
+<style>
+  .code-block-container {
+    @apply my-6;
+  }
+  
+  .code-block-container pre {
+    @apply font-mono;
+  }
+  
+  .code-block-container code {
+    @apply break-words;
+  }
+  
+  /* Scroll personalizado para el código */
+  .code-block-container pre::-webkit-scrollbar {
+    height: 8px;
+  }
+  
+  .code-block-container pre::-webkit-scrollbar-track {
+    @apply bg-gray-800 rounded;
+  }
+  
+  .code-block-container pre::-webkit-scrollbar-thumb {
+    @apply bg-gray-600 rounded hover:bg-gray-500;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Funcionalidad de copiar código
+    const copyButtons = document.querySelectorAll('.copy-code-btn');
+    
+    copyButtons.forEach(button => {
+      button.addEventListener('click', async () => {
+        const code = button.getAttribute('data-code');
+        const copyIcon = button.querySelector('.copy-icon');
+        const checkIcon = button.querySelector('.check-icon');
+        const copyText = button.querySelector('.copy-text');
+        
+        if (code && copyIcon && checkIcon && copyText) {
+          try {
+            await navigator.clipboard.writeText(code);
+            
+            // Cambiar a estado "copiado"
+            copyIcon.classList.add('hidden');
+            checkIcon.classList.remove('hidden');
+            copyText.textContent = '¡Copiado!';
+            button.classList.add('text-green-600', 'dark:text-green-400');
+            
+            // Volver al estado original después de 2 segundos
+            setTimeout(() => {
+              copyIcon.classList.remove('hidden');
+              checkIcon.classList.add('hidden');
+              copyText.textContent = 'Copiar';
+              button.classList.remove('text-green-600', 'dark:text-green-400');
+            }, 2000);
+            
+          } catch (err) {
+            console.error('Error al copiar código:', err);
+            // Fallback para navegadores que no soportan clipboard API
+            copyText.textContent = 'Error';
+            setTimeout(() => {
+              copyText.textContent = 'Copiar';
+            }, 2000);
+          }
+        }
+      });
+    });
+  });
+</script>

@@ -1,0 +1,339 @@
+---
+import { generateHeadingId } from '../../lib/utils';
+
+export interface Props {
+  content: string;
+}
+
+const { content } = Astro.props;
+
+// Función para extraer headings del contenido Markdown
+function extractHeadings(markdown: string) {
+  const headingRegex = /^(#{1,6})\s+(.+)$/gm;
+  const headings = [];
+  let match;
+
+  while ((match = headingRegex.exec(markdown)) !== null) {
+    const level = match[1].length;
+    const text = match[2].trim();
+    const id = generateHeadingId(text, `heading-${headings.length}`);
+
+    headings.push({
+      level,
+      text,
+      id
+    });
+  }
+
+  return headings;
+}
+
+const headings = extractHeadings(content);
+---
+
+{headings.length > 0 && (
+  <div class="toc-container">
+    <div class="sticky top-8">
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+        <span class="mr-2">📑</span>
+        Tabla de contenidos
+      </h3>
+      
+      <nav class="toc-nav bg-gray-50 dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+        <ul class="space-y-2 text-sm">
+          {headings.map((heading) => (
+            <li class={`toc-item toc-level-${heading.level}`}>
+              <a
+                href={`#${heading.id}`}
+                class={`block py-1 px-2 text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded transition-all duration-200 ${
+                  heading.level === 1 ? 'font-semibold text-gray-900 dark:text-white' :
+                  heading.level === 2 ? 'font-medium' :
+                  heading.level >= 3 ? 'text-sm' : ''
+                }`}
+                style={`padding-left: ${(heading.level - 1) * 12 + 8}px`}
+                data-heading-id={heading.id}
+              >
+                {heading.text}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <!-- Progress indicator -->
+      <div class="mt-4 bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
+        <div 
+          id="reading-progress" 
+          class="bg-primary-600 h-full rounded-full transition-all duration-300 ease-out"
+          style="width: 0%"
+        ></div>
+      </div>
+      
+      <div class="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
+        Progreso de lectura
+      </div>
+    </div>
+  </div>
+)}
+
+<style>
+  .toc-nav {
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+
+  .toc-nav::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .toc-nav::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .toc-nav::-webkit-scrollbar-thumb {
+    background: rgba(156, 163, 175, 0.5);
+    border-radius: 2px;
+  }
+
+  .toc-nav::-webkit-scrollbar-thumb:hover {
+    background: rgba(156, 163, 175, 0.7);
+  }
+
+  .toc-item a.active {
+    @apply text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20 font-medium;
+  }
+
+  .toc-item a.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: currentColor;
+    border-radius: 0 2px 2px 0;
+  }
+
+  .toc-level-1 a {
+    @apply border-l-2 border-transparent;
+  }
+
+  .toc-level-1 a.active {
+    @apply border-l-2 border-primary-600 dark:border-primary-400;
+  }
+
+  /* Efecto de highlight para headings */
+  .highlight-heading {
+    @apply bg-primary-50 dark:bg-primary-900/20 px-4 py-2 rounded-lg;
+    animation: highlightPulse 2s ease-in-out;
+  }
+
+  @keyframes highlightPulse {
+    0% {
+      @apply bg-primary-100 dark:bg-primary-900/40;
+      transform: scale(1.02);
+    }
+    50% {
+      @apply bg-primary-50 dark:bg-primary-900/20;
+      transform: scale(1);
+    }
+    100% {
+      @apply bg-transparent;
+      transform: scale(1);
+    }
+  }
+
+  /* Mejorar la navegación del TOC */
+  .toc-nav a:hover {
+    @apply transform scale-105;
+  }
+
+  .toc-nav a.active {
+    @apply shadow-sm;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const tocLinks = document.querySelectorAll('.toc-nav a[data-heading-id]');
+    const progressBar = document.getElementById('reading-progress');
+    let headings: Element[] = [];
+    
+    // Obtener todos los headings del contenido
+    const contentArea = document.querySelector('.prose');
+    if (contentArea) {
+      headings = Array.from(contentArea.querySelectorAll('h1, h2, h3, h4, h5, h6'));
+    }
+
+    // Función para generar ID consistente (debe coincidir con utils.ts)
+    function generateHeadingId(text, fallbackId) {
+      const id = text
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9\s-]/g, '')
+        .trim()
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-+|-+$/g, '');
+      
+      return id || fallbackId || 'heading';
+    }
+
+    // Asegurar que todos los headings tengan IDs consistentes
+    headings.forEach((heading, index) => {
+      const text = heading.textContent?.trim() || '';
+      let id = generateHeadingId(text, `heading-${index}`);
+      
+      // Si el ID ya existe, agregar un sufijo
+      let finalId = id;
+      let counter = 1;
+      while (document.getElementById(finalId) && document.getElementById(finalId) !== heading) {
+        finalId = `${id}-${counter}`;
+        counter++;
+      }
+      
+      heading.id = finalId;
+      
+      // Agregar atributo de scroll-margin para compensar el header fijo
+      heading.setAttribute('style', 'scroll-margin-top: 100px;');
+    });
+
+    // Función para actualizar el TOC activo
+    function updateActiveTocItem() {
+      let activeHeading: Element | null = null;
+      
+      // Encontrar el heading actualmente visible
+      for (let i = headings.length - 1; i >= 0; i--) {
+        const heading = headings[i];
+        const rect = heading.getBoundingClientRect();
+        
+        if (rect.top <= 100) { // 100px de offset desde la parte superior
+          activeHeading = heading;
+          break;
+        }
+      }
+
+      // Remover clase active de todos los enlaces
+      tocLinks.forEach(link => link.classList.remove('active'));
+
+      // Agregar clase active al enlace correspondiente
+      if (activeHeading) {
+        const activeLink = document.querySelector(`[data-heading-id="${activeHeading.id}"]`);
+        if (activeLink) {
+          activeLink.classList.add('active');
+          
+          // Scroll suave del TOC para mantener el elemento activo visible
+          const tocNav = document.querySelector('.toc-nav');
+          if (tocNav) {
+            const linkRect = activeLink.getBoundingClientRect();
+            const tocRect = tocNav.getBoundingClientRect();
+            
+            if (linkRect.bottom > tocRect.bottom || linkRect.top < tocRect.top) {
+              activeLink.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'center' 
+              });
+            }
+          }
+        }
+      }
+    }
+
+    // Función para actualizar la barra de progreso
+    function updateReadingProgress() {
+      if (!progressBar) return;
+
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight - windowHeight;
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      
+      const progress = Math.min(Math.max((scrollTop / documentHeight) * 100, 0), 100);
+      progressBar.style.width = `${progress}%`;
+    }
+
+    // Smooth scroll para los enlaces del TOC
+    tocLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('data-heading-id');
+        const target = targetId ? document.getElementById(targetId) : null;
+        
+        if (target) {
+          // Obtener la altura del header fijo
+          const header = document.querySelector('header') || document.querySelector('.header');
+          const headerHeight = header ? header.offsetHeight + 20 : 80; // 20px de padding extra
+          
+          const targetTop = target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+          
+          // Agregar clase de highlight temporal al heading target
+          target.classList.add('highlight-heading');
+          setTimeout(() => {
+            target.classList.remove('highlight-heading');
+          }, 2000);
+          
+          window.scrollTo({
+            top: targetTop,
+            behavior: 'smooth'
+          });
+
+          // Actualizar inmediatamente el elemento activo
+          tocLinks.forEach(l => l.classList.remove('active'));
+          link.classList.add('active');
+        }
+      });
+    });
+
+    // Eventos de scroll
+    let ticking = false;
+    
+    function handleScroll() {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          updateActiveTocItem();
+          updateReadingProgress();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    // Inicializar
+    updateActiveTocItem();
+    updateReadingProgress();
+
+    // Observer para detectar cambios en el DOM (útil para contenido dinámico)
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          let hasIntersecting = false;
+          entries.forEach(entry => {
+            if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+              hasIntersecting = true;
+              
+              // Remover clase active de todos los enlaces
+              tocLinks.forEach(link => link.classList.remove('active'));
+              
+              // Agregar clase active al enlace correspondiente
+              const activeLink = document.querySelector(`[data-heading-id="${entry.target.id}"]`);
+              if (activeLink) {
+                activeLink.classList.add('active');
+              }
+            }
+          });
+        },
+        {
+          rootMargin: '-20% 0% -60% 0%',
+          threshold: [0, 0.25, 0.5, 0.75, 1]
+        }
+      );
+
+      // Observar todos los headings
+      headings.forEach(heading => {
+        observer.observe(heading);
+      });
+    }
+  });
+</script>

@@ -1,0 +1,51 @@
+---
+// Componente de progreso de lectura global
+---
+
+<div 
+  id="reading-progress-bar" 
+  class="fixed top-0 left-0 z-50 h-1 bg-gradient-to-r from-primary-500 to-primary-700 transition-all duration-300 ease-out"
+  style="width: 0%"
+></div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const progressBar = document.getElementById('reading-progress-bar');
+    
+    if (!progressBar) return;
+
+    function updateReadingProgress() {
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight - windowHeight;
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      
+      const progress = Math.min(Math.max((scrollTop / documentHeight) * 100, 0), 100);
+      progressBar.style.width = `${progress}%`;
+      
+      // Agregar opacidad cuando esté en la parte superior
+      if (scrollTop > 100) {
+        progressBar.style.opacity = '1';
+      } else {
+        progressBar.style.opacity = '0.5';
+      }
+    }
+
+    // Throttled scroll handler
+    let ticking = false;
+    
+    function handleScroll() {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          updateReadingProgress();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    // Inicializar
+    updateReadingProgress();
+  });
+</script>

@@ -1,0 +1,50 @@
+---
+// Componente que muestra mensajes divertidos aleatorios
+const funMessages = [
+  {
+    emoji: "🤖",
+    title: "¡Los robots también se pierden!",
+    message: "Incluso nuestros algoritmos más avanzados no pudieron encontrar esta página."
+  },
+  {
+    emoji: "🚀", 
+    title: "Houston, tenemos un problema",
+    message: "Esta página se fue al espacio y no dejó coordenadas de retorno."
+  },
+  {
+    emoji: "🕵️",
+    title: "Misterio resuelto",
+    message: "Después de una exhaustiva investigación, confirmamos que esta página no existe."
+  },
+  {
+    emoji: "🎯",
+    title: "Casi, pero no",
+    message: "Tu puntería es buena, pero esta página decidió esquivar tu click."
+  },
+  {
+    emoji: "🧙‍♂️",
+    title: "Magia negra detectada",
+    message: "Un mago hizo desaparecer esta página. Estamos trabajando en el contra-hechizo."
+  },
+  {
+    emoji: "📱",
+    title: "404: Coffee not found",
+    message: "Error crítico: Sin café no se puede programar. ¿Quizás necesitas una pausa?"
+  }
+];
+
+// Seleccionar mensaje aleatorio
+const randomMessage = funMessages[Math.floor(Math.random() * funMessages.length)];
+---
+
+<div class="mb-8 p-6 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/10 dark:to-orange-900/10 rounded-xl border border-yellow-200 dark:border-yellow-800/30">
+  <div class="text-center">
+    <div class="text-4xl mb-3">{randomMessage.emoji}</div>
+    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+      {randomMessage.title}
+    </h3>
+    <p class="text-gray-600 dark:text-gray-400">
+      {randomMessage.message}
+    </p>
+  </div>
+</div>

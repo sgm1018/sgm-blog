@@ -1,0 +1,157 @@
+---
+import { ChevronLeft, ChevronRight } from 'lucide-astro';
+import type { BlogPost } from '../../types/blog.types';
+import Card from '../ui/Card.astro';
+
+export interface Props {
+  prev: BlogPost | null;
+  next: BlogPost | null;
+}
+
+const { prev, next } = Astro.props;
+
+// No mostrar navegación si no hay posts anterior ni siguiente
+if (!prev && !next) {
+  return null;
+}
+---
+
+<nav class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+  <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">
+    Navegar por el blog
+  </h3>
+  
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <!-- Post anterior -->
+    {prev ? (
+      <Card 
+        class="p-0 overflow-hidden hover:shadow-lg transition-all duration-300 group"
+        hover={true}
+      >
+        <a href={`/blog/${prev.slug}`} class="block h-full">
+          <div class="flex items-center p-4 h-full">
+            <div class="flex-shrink-0 mr-4">
+              <div class="flex items-center justify-center w-10 h-10 bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400 rounded-full group-hover:bg-primary-200 dark:group-hover:bg-primary-800 transition-colors">
+                <ChevronLeft size={20} />
+              </div>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="text-sm text-gray-500 dark:text-gray-400 mb-1">
+                Artículo anterior
+              </div>
+              <h4 class="text-base font-semibold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors line-clamp-2">
+                {prev.title}
+              </h4>
+              <p class="text-sm text-gray-600 dark:text-gray-400 mt-1 line-clamp-1">
+                {prev.excerpt}
+              </p>
+            </div>
+          </div>
+          {prev.featuredImage && (
+            <div class="h-32 overflow-hidden">
+              <img
+                src={prev.featuredImage}
+                alt={prev.title}
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                loading="lazy"
+              />
+            </div>
+          )}
+        </a>
+      </Card>
+    ) : (
+      <div></div>
+    )}
+
+    <!-- Post siguiente -->
+    {next ? (
+      <Card 
+        class="p-0 overflow-hidden hover:shadow-lg transition-all duration-300 group md:text-right"
+        hover={true}
+      >
+        <a href={`/blog/${next.slug}`} class="block h-full">
+          <div class="flex items-center p-4 h-full md:flex-row-reverse">
+            <div class="flex-shrink-0 ml-4 md:mr-4 md:ml-0">
+              <div class="flex items-center justify-center w-10 h-10 bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400 rounded-full group-hover:bg-primary-200 dark:group-hover:bg-primary-800 transition-colors">
+                <ChevronRight size={20} />
+              </div>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="text-sm text-gray-500 dark:text-gray-400 mb-1">
+                Siguiente artículo
+              </div>
+              <h4 class="text-base font-semibold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors line-clamp-2">
+                {next.title}
+              </h4>
+              <p class="text-sm text-gray-600 dark:text-gray-400 mt-1 line-clamp-1">
+                {next.excerpt}
+              </p>
+            </div>
+          </div>
+          {next.featuredImage && (
+            <div class="h-32 overflow-hidden">
+              <img
+                src={next.featuredImage}
+                alt={next.title}
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                loading="lazy"
+              />
+            </div>
+          )}
+        </a>
+      </Card>
+    ) : (
+      <div></div>
+    )}
+  </div>
+
+  <!-- Navegación compacta para móviles -->
+  <div class="flex justify-between items-center mt-6 md:hidden">
+    {prev ? (
+      <a
+        href={`/blog/${prev.slug}`}
+        class="flex items-center px-4 py-2 text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
+      >
+        <ChevronLeft size={16} class="mr-2" />
+        <span class="text-sm font-medium">Anterior</span>
+      </a>
+    ) : (
+      <div></div>
+    )}
+
+    <a
+      href="/blog"
+      class="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
+    >
+      Todos los posts
+    </a>
+
+    {next ? (
+      <a
+        href={`/blog/${next.slug}`}
+        class="flex items-center px-4 py-2 text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
+      >
+        <span class="text-sm font-medium">Siguiente</span>
+        <ChevronRight size={16} class="ml-2" />
+      </a>
+    ) : (
+      <div></div>
+    )}
+  </div>
+</nav>
+
+<style>
+  .line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

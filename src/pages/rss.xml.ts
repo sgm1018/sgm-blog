@@ -1,11 +1,10 @@
 import rss from '@astrojs/rss';
 import type { APIRoute } from 'astro';
-import { database } from '../lib/database';
+import { BlogService } from '../lib/blog-service';
 
 export const GET: APIRoute = async () => {
   try {
-    await database.connect();
-    const posts = await database.getAllPosts(50, 0); // Get latest 50 posts
+    const posts = await BlogService.getPublishedPosts(50); // Get latest 50 posts
 
     return rss({
       title: 'DevBlog - Desarrollo de Software',
@@ -13,11 +12,11 @@ export const GET: APIRoute = async () => {
       site: 'https://devblog.com',
       items: posts.map((post) => ({
         title: post.title,
-        pubDate: new Date(post.publishedAt),
+        pubDate: post.publishedAt || new Date(post.createdAt),
         description: post.excerpt,
         link: `/blog/${post.slug}/`,
-        author: post.author.email,
-        categories: post.categories.map(cat => cat.name),
+        author: post.author.email || post.author.name,
+        categories: [post.category.name, ...post.tags.map(tag => tag.name)],
       })),
       customData: `<language>es-es</language>`,
     });

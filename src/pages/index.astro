@@ -6,113 +6,37 @@ import Button from '../components/ui/Button.astro';
 import Badge from '../components/ui/Badge.astro';
 import Card from '../components/ui/Card.astro';
 import { Code, BookOpen, Users, TrendingUp, ArrowRight, Star } from 'lucide-astro';
+import { BlogService } from '../lib/blog-service';
 
+// Obtener datos desde Supabase
+let featuredPosts: any[] = [];
+let recentPosts: any[] = [];
+let categories: any[] = [];
 
+try {
+  // Obtener posts destacados
+  featuredPosts = await BlogService.getFeaturedPosts(1);
+  
+  // Obtener posts recientes
+  recentPosts = await BlogService.getPublishedPosts(3);
+  
+  // Obtener categorías
+  categories = await BlogService.getCategories();
+} catch (error) {
+  console.error('Error fetching homepage data:', error);
+  featuredPosts = [];
+  recentPosts = [];
+  categories = [];
+}
 
-// Sample data for demonstration
-const featuredPost = {
-  _id: '1',
-  title: 'El Futuro del Desarrollo Web: Tendencias 2025',
-  slug: 'futuro-desarrollo-web-2025',
-  excerpt: 'Exploramos las tecnologías emergentes que están transformando el desarrollo web moderno, desde WebAssembly hasta los frameworks de próxima generación.',
-  content: '',
-  author: {
-    name: 'Juan Pérez',
-    email: 'juan@example.com',
-    avatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=64&h=64&dpr=2'
-  },
-  publishedAt: new Date('2025-01-10'),
-  updatedAt: new Date('2025-01-10'),
-  featuredImage: 'https://images.pexels.com/photos/577585/pexels-photo-577585.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=2',
-  categories: [{ name: 'Frontend', slug: 'frontend', color: '#3b82f6' }],
-  tags: [{ name: 'React', slug: 'react' }, { name: 'Next.js', slug: 'nextjs' }],
-  readingTime: 8,
-  isPublished: true,
-  seo: {
-    title: 'El Futuro del Desarrollo Web: Tendencias 2025',
-    description: 'Exploramos las tecnologías emergentes que están transformando el desarrollo web moderno.',
-    keywords: ['desarrollo web', 'tendencias 2025', 'tecnología']
-  }
-};
-
-const recentPosts = [
-  {
-    _id: '2',
-    title: 'TypeScript Avanzado: Tipos Condicionales y Mapped Types',
-    slug: 'typescript-avanzado-tipos-condicionales',
-    excerpt: 'Domina los conceptos avanzados de TypeScript para escribir código más seguro y expresivo.',
-    content: '',
-    author: {
-      name: 'María García',
-      email: 'maria@example.com'
-    },
-    publishedAt: new Date('2025-01-08'),
-    updatedAt: new Date('2025-01-08'),
-    featuredImage: 'https://images.pexels.com/photos/4164418/pexels-photo-4164418.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&dpr=2',
-    categories: [{ name: 'Backend', slug: 'backend', color: '#059669' }],
-    tags: [{ name: 'TypeScript', slug: 'typescript' }, { name: 'JavaScript', slug: 'javascript' }],
-    readingTime: 6,
-    isPublished: true,
-    seo: {
-      keywords: []
-    }
-  },
-  {
-    _id: '3',
-    title: 'Arquitectura de Microservicios con Docker y Kubernetes',
-    slug: 'microservicios-docker-kubernetes',
-    excerpt: 'Guía completa para diseñar y desplegar aplicaciones basadas en microservicios.',
-    content: '',
-    author: {
-      name: 'Carlos López',
-      email: 'carlos@example.com'
-    },
-    publishedAt: new Date('2025-01-06'),
-    updatedAt: new Date('2025-01-06'),
-    featuredImage: 'https://images.pexels.com/photos/546819/pexels-photo-546819.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&dpr=2',
-    categories: [{ name: 'DevOps', slug: 'devops', color: '#7c3aed' }],
-    tags: [{ name: 'Docker', slug: 'docker' }, { name: 'Kubernetes', slug: 'kubernetes' }],
-    readingTime: 12,
-    isPublished: true,
-    seo: {
-      keywords: []
-    }
-  },
-  {
-    _id: '4',
-    title: 'React Server Components: El Nuevo Paradigma',
-    slug: 'react-server-components-paradigma',
-    excerpt: 'Descubre cómo los Server Components están revolucionando el desarrollo con React.',
-    content: '',
-    author: {
-      name: 'Ana Martín',
-      email: 'ana@example.com'
-    },
-    publishedAt: new Date('2025-01-04'),
-    updatedAt: new Date('2025-01-04'),
-    featuredImage: 'https://images.pexels.com/photos/1181677/pexels-photo-1181677.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&dpr=2',
-    categories: [{ name: 'Frontend', slug: 'frontend', color: '#3b82f6' }],
-    tags: [{ name: 'React', slug: 'react' }, { name: 'SSR', slug: 'ssr' }],
-    readingTime: 9,
-    isPublished: true,
-    seo: {
-      keywords: []
-    }
-  }
-];
+// Usar el primer post destacado como hero
+const featuredPost = featuredPosts[0] || null;
 
 const stats = [
   { label: 'Artículos Publicados', value: '120+', icon: BookOpen },
   { label: 'Desarrolladores Leen', value: '15K+', icon: Users },
   { label: 'Tecnologías Cubiertas', value: '50+', icon: Code },
   { label: 'Proyectos Destacados', value: '25+', icon: Star }
-];
-
-const categories = [
-  { name: 'Frontend', slug: 'frontend', description: 'React, Vue, Angular, CSS', color: 'bg-blue-500', posts: 45 },
-  { name: 'Backend', slug: 'backend', description: 'Node.js, Python, Java, APIs', color: 'bg-green-500', posts: 38 },
-  { name: 'DevOps', slug: 'devops', description: 'Docker, Kubernetes, CI/CD', color: 'bg-purple-500', posts: 22 },
-  { name: 'Mobile', slug: 'mobile', description: 'React Native, Flutter, Swift', color: 'bg-orange-500', posts: 15 }
 ];
 ---
 
@@ -209,7 +133,22 @@ const categories = [
         </Badge>
       </div>
       
-      <PostCard post={featuredPost} featured={true} />
+      {featuredPost ? (
+        <PostCard post={featuredPost} featured={true} />
+      ) : (
+        <div class="text-center py-16">
+          <h3 class="text-2xl font-semibold text-white mb-4">
+            Bienvenido a DevBlog
+          </h3>
+          <p class="text-blue-100 mb-6">
+            Los artículos destacados aparecerán aquí una vez que configures Supabase y tengas contenido.
+          </p>
+          <Button href="/blog" size="lg" class="bg-white text-primary-600 hover:bg-gray-100">
+            Ver Blog
+            <ArrowRight size={20} class="ml-2" />
+          </Button>
+        </div>
+      )}
     </div>
   </section>
 
@@ -227,9 +166,23 @@ const categories = [
       </div>
       
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {recentPosts.map((post) => (
-          <PostCard post={post} />
-        ))}
+        {recentPosts.length > 0 ? (
+          recentPosts.map((post) => (
+            <PostCard post={post} />
+          ))
+        ) : (
+          <div class="col-span-full text-center py-16">
+            <div class="w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-6">
+              <BookOpen size={32} class="text-gray-400" />
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+              No hay artículos disponibles
+            </h3>
+            <p class="text-gray-600 dark:text-gray-400">
+              Los artículos aparecerán aquí una vez que configures Supabase y tengas contenido.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   </section>
@@ -247,32 +200,46 @@ const categories = [
       </div>
       
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {categories.map((category) => (
-          <Card hover={true} class="text-center">
-            <div class={`w-16 h-16 ${category.color} rounded-2xl flex items-center justify-center mx-auto mb-4`}>
-              <Code size={32} class="text-white" />
+        {categories.length > 0 ? (
+          categories.map((category) => (
+            <Card hover={true} class="text-center">
+              <div class="w-16 h-16 bg-primary-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <Code size={32} class="text-white" />
+              </div>
+              <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                {category.name}
+              </h3>
+              <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
+                {category.description || 'Categoría de artículos'}
+              </p>
+              <div class="flex items-center justify-between">
+                <span class="text-sm text-gray-500 dark:text-gray-400">
+                  Ver artículos
+                </span>
+                <Button 
+                  href={`/blog?category=${category.slug}`} 
+                  variant="ghost" 
+                  size="sm"
+                  class="text-primary-600 dark:text-primary-400"
+                >
+                  Ver más →
+                </Button>
+              </div>
+            </Card>
+          ))
+        ) : (
+          <div class="col-span-full text-center py-16">
+            <div class="w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Code size={32} class="text-gray-400" />
             </div>
             <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-              {category.name}
+              Categorías en construcción
             </h3>
-            <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
-              {category.description}
+            <p class="text-gray-600 dark:text-gray-400">
+              Las categorías aparecerán aquí una vez que configures Supabase.
             </p>
-            <div class="flex items-center justify-between">
-              <span class="text-sm text-gray-500 dark:text-gray-400">
-                {category.posts} artículos
-              </span>
-              <Button 
-                href={`/categories/${category.slug}`} 
-                variant="ghost" 
-                size="sm"
-                class="text-primary-600 dark:text-primary-400"
-              >
-                Ver más →
-              </Button>
-            </div>
-          </Card>
-        ))}
+          </div>
+        )}
       </div>
     </div>
   </section>

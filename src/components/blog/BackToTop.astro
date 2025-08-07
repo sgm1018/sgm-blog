@@ -1,0 +1,70 @@
+---
+import { ArrowUp } from 'lucide-astro';
+---
+
+<button
+  id="back-to-top"
+  class="fixed bottom-8 right-8 z-40 p-3 bg-primary-600 hover:bg-primary-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform translate-y-16 opacity-0 pointer-events-none"
+  title="Volver arriba"
+  aria-label="Volver al inicio de la página"
+>
+  <ArrowUp size={24} />
+</button>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const backToTopButton = document.getElementById('back-to-top');
+    
+    if (!backToTopButton) return;
+
+    // Mostrar/ocultar botón basado en el scroll
+    function toggleBackToTopButton() {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      
+      if (scrollTop > 300) {
+        backToTopButton.classList.remove('translate-y-16', 'opacity-0', 'pointer-events-none');
+        backToTopButton.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
+      } else {
+        backToTopButton.classList.add('translate-y-16', 'opacity-0', 'pointer-events-none');
+        backToTopButton.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
+      }
+    }
+
+    // Scroll suave hacia arriba
+    function scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+
+    // Throttled scroll handler
+    let ticking = false;
+    
+    function handleScroll() {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          toggleBackToTopButton();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+
+    // Event listeners
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    backToTopButton.addEventListener('click', scrollToTop);
+
+    // Inicializar estado
+    toggleBackToTopButton();
+
+    // Animación al hover
+    backToTopButton.addEventListener('mouseenter', () => {
+      backToTopButton.classList.add('scale-110');
+    });
+
+    backToTopButton.addEventListener('mouseleave', () => {
+      backToTopButton.classList.remove('scale-110');
+    });
+  });
+</script>

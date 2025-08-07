@@ -24,6 +24,20 @@ export function createSlug(text: string): string {
     .replace(/-+/g, '-');
 }
 
+export function generateHeadingId(text: string, fallbackId?: string): string {
+  const id = text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-+|-+$/g, '');
+  
+  return id || fallbackId || 'heading';
+}
+
 export function truncateText(text: string, maxLength: number): string {
   if (text.length <= maxLength) return text;
   return text.substring(0, maxLength).replace(/\s+\S*$/, '') + '...';
